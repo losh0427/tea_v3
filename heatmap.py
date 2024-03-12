@@ -57,6 +57,6 @@ if __name__ =='__main__':
     # while output_number <= 0:
     #     print(superposition("C:/Users/USER/Desktop/Tea_second/Code_v1/Full_Flow/Data1",0))
     #     output_number+=3
-    drawHeatMap("C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/Data1", 63,63)
-    print(superposition("C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/Data1", 63))
+    drawHeatMap("C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/", 63,63)
+    print(superposition("C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/", 63))
     #C:/Users/USER/Desktop/Tea_second/Code_v1/Full_Flow/Data

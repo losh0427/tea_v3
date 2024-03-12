@@ -43,9 +43,9 @@ if __name__ ==  "__main__":
     data_name = args.data
     DATA_PATH = f'{PATH}/{data_name}.txt'
 
-    move_file_source = 'C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/Data1'
-    move_file_destination = 'C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/Data/'
-    file_record = 'C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/move_file.txt'
+    move_file_source = 'C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/'
+    move_file_destination = 'C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data/'
+    file_record = 'C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/move_file.txt'
 
     #move file to Data
     with open(file_record, mode='r+', encoding='utf-8') as f:
@@ -126,6 +126,7 @@ if __name__ ==  "__main__":
             Output_Handler_superposition(output_number-3,output_path,DATA_PATH,parameters[num])
 
 
+            #TODO : deal the output foramt
             # show training result
             actual_data = []
             with open(DATA_PATH,'r') as f:
@@ -145,7 +146,6 @@ if __name__ ==  "__main__":
             
             #if pre_max_index != max_index :
             #     drawHeatMap(output_path, output_number - 3, max_index)
-
             print(f"actual value {max_value}, predict value {parameters[num][-1]}, \
                 actual average {actual_data[max_index][-2]}, actual std : {actual_data[max_index][-1]}, \
                 max index {max_index+1}")

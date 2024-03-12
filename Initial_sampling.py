@@ -45,10 +45,10 @@ def initial_LHS_model():
 
 
 def Create_Initial_dataset_Superposition ():
-    path = "C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/Data1/"
-    dataset_path = "C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/data_1004.txt"
+    path = "C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/"
+    dataset_path = "C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/data_1004.txt"
     for i in range(0,900,3):
-        average, std = superposition(path,i)
+        elec_mean , elec_std, heat_mean, heat_std = superposition(path,i)
         input_parameter = []
         for j in range(3):
             if j == 1 or j == 0:
@@ -63,9 +63,12 @@ def Create_Initial_dataset_Superposition ():
                     for line in lines:
                         ans = line.split(' ')[:-1]
                     input_parameter.extend(ans)
-        input_parameter.append(str(average - std * 2))
-        input_parameter.append(str(average))
-        input_parameter.append(str(std))
+        input_parameter.append(str(elec_mean))
+        input_parameter.append(str(elec_std))
+        input_parameter.append(str(heat_mean))
+        input_parameter.append(str(heat_std))
+        input_parameter.append(str((heat_mean + elec_mean)/2))
+        
         print(input_parameter)
 
         with open(dataset_path,'a') as f:

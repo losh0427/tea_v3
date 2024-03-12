@@ -25,8 +25,27 @@ def move_file(source, destination, initial_count, final_count):
         #print("Moved {src_path} -> {dst_path}")
 
 def elec_to_heat( file1, file2, file3, coeff = 100000, item = 0.95):
-
-    pass
+    # change electric field to heat
+    #deal coefficient : div coefficient
+    for i in range(len(file1)):
+        file1[i][3] = file1[i][3]/coeff
+        file2[i][3] = file2[i][3]/coeff
+        file3[i][3] = file3[i][3]/coeff
+    # deal spread
+    mean1 = statistics.mean([file1[i][3] for i in range(len(file1))])
+    for i in range(len(file1)):
+        file1[i][3] = file1[i][3] + (mean1 - file1[i][3])*item
+    for i in range(len(file1)):
+        file1[i][3] = file1[i][3] + file2[i][3] 
+    mean2 = statistics.mean([file1[i][3] for i in range(len(file1))])
+    for i in range(len(file1)):
+        file1[i][3] = file1[i][3] + (mean2 - file1[i][3])*item
+    for i in range(len(file1)):
+        file1[i][3] = file1[i][3] + file3[i][3]
+    mean3 = statistics.mean([file1[i][3] for i in range(len(file1))])
+    for i in range(len(file1)):
+        file1[i][3] = file1[i][3] + (mean3 - file1[i][3])*item
+    return file1
 
 
 def superposition(OUTPUT_PATH,output_number):
@@ -46,16 +65,12 @@ def superposition(OUTPUT_PATH,output_number):
     heat_file1 = file1.copy()
     heat_file2 = file2.copy()
     heat_file3 = file3.copy()
-    elec_to_heat()
+    heat_file = elec_to_heat(heat_file1, heat_file2, heat_file3)
     
     #average electric fields       
     file = file1.copy() 
-    average_mean_list = []
-    for i in range(len(file1)):
-        file[i][3] = (file1[i][3]+file2[i][3]+file3[i][3])/3
-        average_mean_list.append(file[i][3])
-    mean_field =  statistics.mean(average_mean_list)   
-    
+    elec_mean_field = statistics.mean([file[i][3] for i in range(len(file))])
+    heat_mean_field = statistics.mean([heat_file[i][3] for i in range(len(heat_file))])
 
 
     #split 10*10 square
@@ -77,16 +92,40 @@ def superposition(OUTPUT_PATH,output_number):
             for k in range(10):
                 temp.append(list_square[i][j][k][3])        
         average_of_sm_square.append(statistics.mean(temp))
-    std_field = statistics.pstdev(average_of_sm_square)
-    return mean_field, std_field
+    elec_std_field = statistics.pstdev(average_of_sm_square)
+    
+    #do the same thing for heat field
+    list_square = []
+    count = 0
+    for a in range(len(heat_file)//100):
+        small_sqaure = np.empty((10, 10),dtype = object ) #10*10 square
+        for i in range(10):
+            for j in range(10):
+                if count<len(heat_file):
+                    small_sqaure[i][j] = heat_file[count]
+                    count+=1
+        list_square.append(small_sqaure)
+    #average each 10*10 square
+    average_of_sm_square = []  #record the mean electric field of each 10*10 square
+    for i in range(len(list_square)):
+        temp = []
+        for j in range(10):
+            for k in range(10):
+                temp.append(list_square[i][j][k][3])        
+        average_of_sm_square.append(statistics.mean(temp))
+    heat_std_field = statistics.pstdev(average_of_sm_square)
+
+    return elec_mean_field, elec_std_field , heat_mean_field, heat_std_field
 
 
 def Output_Handler_superposition(iteration, path, dataset_path, parameter):
-    average, std = superposition(path,iteration)
+    elec_mean , elec_std, heat_mean, heat_std = superposition(path,iteration)
     parameter.pop(-1) # paramete[-1] is surrogate model predict value 
-    parameter.append(str(average - std * 3))
-    parameter.append(str(average))
-    parameter.append(str(std))
+    parameter.append(str(elec_mean))
+    parameter.append(str(elec_std))
+    parameter.append(str(heat_mean))
+    parameter.append(str(heat_std))
+    parameter.append(str((heat_mean + elec_mean)/2))
     with open(dataset_path,'a') as f:
         for para in parameter[:-1]:
             f.write(str(para) + " ")
