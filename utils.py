@@ -24,6 +24,11 @@ def move_file(source, destination, initial_count, final_count):
         shutil.move(src_path, dst_path)
         #print("Moved {src_path} -> {dst_path}")
 
+def elec_to_heat( file1, file2, file3, coeff = 100000, item = 0.95):
+
+    pass
+
+
 def superposition(OUTPUT_PATH,output_number):
     #open file 
     with open(f'{OUTPUT_PATH}/output{output_number}.fld', 'r') as f1:
@@ -37,7 +42,12 @@ def superposition(OUTPUT_PATH,output_number):
         file1[i] =  [float(x) for x in file1[i].split()]
         file2[i] =  [float(x) for x in file2[i].split()]
         file3[i] =  [float(x) for x in file3[i].split()]
-        
+    
+    heat_file1 = file1.copy()
+    heat_file2 = file2.copy()
+    heat_file3 = file3.copy()
+    elec_to_heat()
+    
     #average electric fields       
     file = file1.copy() 
     average_mean_list = []
@@ -45,6 +55,8 @@ def superposition(OUTPUT_PATH,output_number):
         file[i][3] = (file1[i][3]+file2[i][3]+file3[i][3])/3
         average_mean_list.append(file[i][3])
     mean_field =  statistics.mean(average_mean_list)   
+    
+
 
     #split 10*10 square
     list_square = []
