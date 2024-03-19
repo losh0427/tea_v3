@@ -137,17 +137,21 @@ if __name__ ==  "__main__":
             max_value = 0
             max_index = -1
             for i in range(len(actual_data)):
-                temp = float(actual_data[i][-3])
+                temp = float(actual_data[i][-1])
                 if temp > max_value:
                     max_value = temp
                     max_index = i
+            # first time
             if pre_max_index == -1:
                 pre_max_index = max_index
             
             #if pre_max_index != max_index :
             #     drawHeatMap(output_path, output_number - 3, max_index)
-            print(f"actual value {max_value}, predict value {parameters[num][-1]}, \
-                actual average {actual_data[max_index][-2]}, actual std : {actual_data[max_index][-1]}, \
+            print(f"round {num}, \
+                  this round predict value {parameters[num][-1]}, \
+                actual value {max_value}, 
+                actual electric average {actual_data[max_index][-5]}, actual electric std : {actual_data[max_index][-4]}, \
+                actual heat average {actual_data[max_index][-3]}, actual heat std : {actual_data[max_index][-2]}, \
                 max index {max_index+1}")
             print("------------------------------")
             final_count+=1

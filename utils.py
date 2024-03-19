@@ -48,6 +48,14 @@ def elec_to_heat( file1, file2, file3, coeff = 100000, item = 0.95):
     return file1
 
 
+# need a function to decide the surrogate model objective value 
+def objective_value(elec_mean , elec_std, heat_mean, heat_std):
+    # weight function (need to be modified)
+    # weight = [0.5, 0.5]
+    # final_val = weight[0]*elec_mean + weight[1]*heat_mean
+    final_val = (heat_mean - heat_std)/2
+    return final_val
+
 def superposition(OUTPUT_PATH,output_number):
     #open file 
     with open(f'{OUTPUT_PATH}/output{output_number}.fld', 'r') as f1:
@@ -114,18 +122,18 @@ def superposition(OUTPUT_PATH,output_number):
                 temp.append(list_square[i][j][k][3])        
         average_of_sm_square.append(statistics.mean(temp))
     heat_std_field = statistics.pstdev(average_of_sm_square)
-
-    return elec_mean_field, elec_std_field , heat_mean_field, heat_std_field
+    obj_val = objective_value(elec_mean_field , elec_std_field, heat_mean_field, heat_std_field)
+    return elec_mean_field, elec_std_field , heat_mean_field, heat_std_field , obj_val
 
 
 def Output_Handler_superposition(iteration, path, dataset_path, parameter):
-    elec_mean , elec_std, heat_mean, heat_std = superposition(path,iteration)
+    elec_mean , elec_std, heat_mean, heat_std , val = superposition(path,iteration)
     parameter.pop(-1) # paramete[-1] is surrogate model predict value 
     parameter.append(str(elec_mean))
     parameter.append(str(elec_std))
     parameter.append(str(heat_mean))
     parameter.append(str(heat_std))
-    parameter.append(str((heat_mean + elec_mean)/2))
+    parameter.append(str(val))
     with open(dataset_path,'a') as f:
         for para in parameter[:-1]:
             f.write(str(para) + " ")

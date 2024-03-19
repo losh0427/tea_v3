@@ -47,8 +47,9 @@ def initial_LHS_model():
 def Create_Initial_dataset_Superposition ():
     path = "C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/"
     dataset_path = "C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/data_1004.txt"
+    init_flag = False
     for i in range(0,900,3):
-        elec_mean , elec_std, heat_mean, heat_std = superposition(path,i)
+        elec_mean , elec_std, heat_mean, heat_std, val = superposition(path,i)
         input_parameter = []
         for j in range(3):
             if j == 1 or j == 0:
@@ -67,11 +68,11 @@ def Create_Initial_dataset_Superposition ():
         input_parameter.append(str(elec_std))
         input_parameter.append(str(heat_mean))
         input_parameter.append(str(heat_std))
-        input_parameter.append(str((heat_mean + elec_mean)/2))
+        input_parameter.append(str(val))
         
-        print(input_parameter)
+        # print(input_parameter)
 
-        with open(dataset_path,'a') as f:
+        with open(dataset_path,'w') as f:
             for para in input_parameter[:-1]:
                 f.write(str(para) + " ")
             f.write(str(input_parameter[-1]) + "\n")
@@ -79,37 +80,37 @@ def Create_Initial_dataset_Superposition ():
         print("finish")
 
 if __name__ ==  "__main__":
-    # Create_Initial_dataset_Superposition()
-    parser = argparse.ArgumentParser(description='hello!')
-    parser.add_argument('-p','--path',help='The path to the file',default='C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow')
-    parser.add_argument('-d','--data',help='data name',default='data_1004')
+    Create_Initial_dataset_Superposition()
+    # parser = argparse.ArgumentParser(description='hello!')
+    # parser.add_argument('-p','--path',help='The path to the file',default='C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow')
+    # parser.add_argument('-d','--data',help='data name',default='data_1004')
 
 
-    args = parser.parse_args()
-    PATH = args.path
-    data_name = args.data
-    DATA_PATH = f'{PATH}/{data_name}.txt'
+    # args = parser.parse_args()
+    # PATH = args.path
+    # data_name = args.data
+    # DATA_PATH = f'{PATH}/{data_name}.txt'
 
-    # delete data
-    file_patterns = ["input*.txt", "output*.fld"]
-    delete_files = []
-    for pattern in file_patterns:
-        delete_files += glob.glob(os.path.join(f'{PATH}/Data', pattern))
-    for f in delete_files:
-        os.remove(f)
-    try:
-        os.remove(f'{PATH}/surrogate_result.csv')
-    except:
-        None
+    # # delete data
+    # file_patterns = ["input*.txt", "output*.fld"]
+    # delete_files = []
+    # for pattern in file_patterns:
+    #     delete_files += glob.glob(os.path.join(f'{PATH}/Data', pattern))
+    # for f in delete_files:
+    #     os.remove(f)
+    # try:
+    #     os.remove(f'{PATH}/surrogate_result.csv')
+    # except:
+    #     None
 
-    input_number = 0
-    output_number = 0
+    # input_number = 0
+    # output_number = 0
     
-    for i in range(300):
-        # predict
-        parameters = initial_LHS_model()
-        for j in range(3):
-            with open(f'{PATH}/Data1/input{input_number}.txt', 'w') as f:
-                for parameter in parameters[j]:
-                    f.write(str(parameter) + " ")
-            input_number += 1
+    # for i in range(300):
+    #     # predict
+    #     parameters = initial_LHS_model()
+    #     for j in range(3):
+    #         with open(f'{PATH}/Data1/input{input_number}.txt', 'w') as f:
+    #             for parameter in parameters[j]:
+    #                 f.write(str(parameter) + " ")
+    #         input_number += 1
