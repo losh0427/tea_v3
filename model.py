@@ -1,6 +1,5 @@
 import random
 import os
-import shutil
 import time
 import pandas as pd
 import glob
@@ -20,8 +19,10 @@ from smt.applications.mixed_integer import(
 )
 import csv
 import argparse
-
-from utils import Output_Handler_superposition , move_file
+from utils import Output_Handler_superposition
+from superposition import drawHeatMap
+import shutil
+from move_file import move_file
 
 # PATH = "C:/Users/USER/Desktop/Code/Full_Flow"
 # DATA_PATH = f'{PATH}/data_for_vedio.txt'
@@ -30,6 +31,32 @@ BOX_MAXIMUM  = 500
 # ANGLES = [0, 90]
 # POSITIONS = ["up", "front", "back", "left", "right"]
 #POSITIONS = ["0", "1", "2", "3", "4"]
+
+
+# TODO: surrogate or RL
+def initial_LHS_model():
+    # randomly generate parameter
+
+    # Box_X, Box_Y, Box_Z, Waveport1_angle, Waveport1_position, Waveport2_angle, Waveport2_position, Waveport1_x, Waveport1_y, Waveport2_x, Waveport2_y, frequency, Waveport1_phase, Waveport2_phase
+    
+    #Model1_Waveport1_Phase, Model1_Waveport1_frequency, Model1_Waveport1_power, Model1_Waveport2_Phase, Model1_Waveport2_frequency, Model1_Waveport2_power, Model1_waveport1_x, Model1_waveport1_y, Model2_waveport1_x, Model2_waveport1_y
+    xtypes = [FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT]
+    xlimits = [[0, 360], ["2","2.45","3"], [500,900], [0, 360], ["2","2.45","3"], [500,900], [0, 360], ["2","2.45","3"], [500,900], [0, 360], ["2","2.45","3"], [500,900], [0, 360], ["2","2.45","3"], [500,900], [0, 360], ["2","2.45","3"], [500,900], [-100, 100], [-100, 100], [-100, 100], [-100, 100]]
+    mixint = MixedIntegerContext(xtypes, xlimits)
+    sampling_method = mixint.build_sampling_method(Random)
+    sampling_value = sampling_method(1)[0]
+    # print((sampling_value))
+    input1 = sampling_value[:6]
+    input2 = sampling_value[6:12]
+    input3 = sampling_value[12:18]
+    position = sampling_value[18:]
+    input1 = np.append(input1,position)
+    input2 = np.append(input2,position)
+    input3 = np.append(input3,position)
+    sampling_split = [input1,input2,input3]
+    return sampling_split
+
+
 
 
 if __name__ ==  "__main__":
@@ -43,9 +70,9 @@ if __name__ ==  "__main__":
     data_name = args.data
     DATA_PATH = f'{PATH}/{data_name}.txt'
 
-    move_file_source = 'C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/'
-    move_file_destination = 'C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data/'
-    file_record = 'C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/move_file.txt'
+    move_file_source = 'C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/Data1'
+    move_file_destination = 'C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/Data/'
+    file_record = 'C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/move_file.txt'
 
     #move file to Data
     with open(file_record, mode='r+', encoding='utf-8') as f:
@@ -126,7 +153,6 @@ if __name__ ==  "__main__":
             Output_Handler_superposition(output_number-3,output_path,DATA_PATH,parameters[num])
 
 
-            #TODO : deal the output foramt
             # show training result
             actual_data = []
             with open(DATA_PATH,'r') as f:
@@ -137,21 +163,18 @@ if __name__ ==  "__main__":
             max_value = 0
             max_index = -1
             for i in range(len(actual_data)):
-                temp = float(actual_data[i][-1])
+                temp = float(actual_data[i][-3])
                 if temp > max_value:
                     max_value = temp
                     max_index = i
-            # first time
             if pre_max_index == -1:
                 pre_max_index = max_index
             
             #if pre_max_index != max_index :
             #     drawHeatMap(output_path, output_number - 3, max_index)
-            print(f"round {num}, \
-                  this round predict value {parameters[num][-1]}, \
-                actual value {max_value}, 
-                actual electric average {actual_data[max_index][-5]}, actual electric std : {actual_data[max_index][-4]}, \
-                actual heat average {actual_data[max_index][-3]}, actual heat std : {actual_data[max_index][-2]}, \
+
+            print(f"actual value {max_value}, predict value {parameters[num][-1]}, \
+                actual average {actual_data[max_index][-2]}, actual std : {actual_data[max_index][-1]}, \
                 max index {max_index+1}")
             print("------------------------------")
             final_count+=1

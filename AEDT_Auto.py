@@ -574,7 +574,7 @@ def Simulation(Waveport1_Phase, Waveport1_Frequency, Waveport1_Power, Waveport2_
 	oModule = oDesign.GetModule("FieldsReporter")
 	oModule.CopyNamedExprToStack("Mag_E")
 
-	oModule.ExportOnGrid("C:\\Users\\USER\\Desktop\\tea\\3\\Tea_second\\Code_v3\\Full_Flow\\Data1\\output"+str(name)+".fld", [str(grid_x_start)+"mm", str(grid_y_start)+"mm", str(grid_z_start)+"mm"], [str(grid_x_end)+"mm", str(grid_y_end)+"mm", str(grid_z_end)+"mm"], [str(GRID_SIZE)+"mm", str(GRID_SIZE)+"mm", str(GRID_SIZE)+"mm"], "Setup1 : LastAdaptive", 
+	oModule.ExportOnGrid("C:\\Users\\USER\\Desktop\\Tea_second\\Code_v3\\Full_Flow\\Data1\\output"+str(name)+".fld", [str(grid_x_start)+"mm", str(grid_y_start)+"mm", str(grid_z_start)+"mm"], [str(grid_x_end)+"mm", str(grid_y_end)+"mm", str(grid_z_end)+"mm"], [str(GRID_SIZE)+"mm", str(GRID_SIZE)+"mm", str(GRID_SIZE)+"mm"], "Setup1 : LastAdaptive", 
 		[
 			"Freq:="		, str(Waveport1_Frequency)+"GHz",
 			"Phase:="		, "0deg"
@@ -585,23 +585,23 @@ def Simulation(Waveport1_Phase, Waveport1_Frequency, Waveport1_Power, Waveport2_
 
 if __name__ ==  "__main__":
 
-	for iteration in range(0,250):
-		path = "C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/input"+str(iteration)+".txt"
+	for iteration in range(9,11):
+		path = "C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/Data1/input"+str(iteration)+".txt"
 		while not os.path.exists(path):
 			time.sleep(1)
 		with open(path) as f:
 			for line in f.readlines():
 				s = line.split(' ')
 				Model1_Waveport1_Phase = float(s[0])
-				Model1_Waveport1_Frequency = float(2.45)
-				Model1_Waveport1_Power = float(s[1])
-				Model1_Waveport2_Phase = float(s[2])
-				Model1_Waveport2_Frequency = float(2.45)
-				Model1_Waveport2_Power = float(s[3])
-				Model1_Waveport1_x = float(s[4])
-				Model1_Waveport1_y = float(s[5])
-				Model2_Waveport1_x = float(s[6])
-				Model2_Waveport1_y = float(s[7])
+				Model1_Waveport1_Frequency = float(s[1])
+				Model1_Waveport1_Power = float(s[2])
+				Model1_Waveport2_Phase = float(s[3])
+				Model1_Waveport2_Frequency = float(s[4])
+				Model1_Waveport2_Power = float(s[5])
+				Model1_Waveport1_x = float(s[6])
+				Model1_Waveport1_y = float(s[7])
+				Model2_Waveport1_x = float(s[8])
+				Model2_Waveport1_y = float(s[9])
  
 
 		Simulation(Model1_Waveport1_Phase, Model1_Waveport1_Frequency, Model1_Waveport1_Power, Model1_Waveport2_Phase, Model1_Waveport2_Frequency, Model1_Waveport2_Power,iteration, Model1_Waveport1_x, Model1_Waveport1_y, Model2_Waveport1_x, Model2_Waveport1_y)

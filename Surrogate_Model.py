@@ -25,6 +25,7 @@ from sklearn.svm import SVR
 class Surrogate_model():
     def __init__(self):
         self.phase = [0, 360]
+        self.FREQUENCY = ["2.0", "2.45", "3.0"]
         self.Power = [500, 900]
         self.position = [-100, 100]
         self.number_of_parameter = 18
@@ -32,8 +33,8 @@ class Surrogate_model():
         self.Power_MINIMUM = 500
         self.Power_MAXIMUM  = 900
         self.sampling_num = 30
-        self.xtypes = [FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT]
-        self.xlimits = [self.phase, self.Power, self.phase, self.Power, self.phase, self.Power, self.phase, self.Power, self.phase, self.Power, self.phase, self.Power, self.position, self.position, self.position, self.position]
+        self.xtypes = [FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT]
+        self.xlimits = [self.phase, self.FREQUENCY, self.Power, self.phase, self.FREQUENCY, self.Power, self.phase, self.FREQUENCY, self.Power, self.phase, self.FREQUENCY, self.Power, self.phase, self.FREQUENCY, self.Power, self.phase, self.FREQUENCY, self.Power, self.position, self.position, self.position, self.position]
         self.mixint = MixedIntegerContext(self.xtypes, self.xlimits)
         self.train_x = []
         self.train_y = []
@@ -69,9 +70,15 @@ class Surrogate_model():
                 s[13] = float(s[13])
                 s[14] = float(s[14])
                 s[15] = float(s[15])
+                s[16] = float(s[16])
+                s[17] = float(s[17])
+                s[18] = float(s[18])
+                s[19] = float(s[19])
+                s[20] = float(s[20])
+                s[21] = float(s[21])
 
-                self.train_x.append(s[0:16])
-                self.train_y.append(int(float(s[-1])))
+                self.train_x.append(s[:-3])
+                self.train_y.append(int(float(s[-3])))
         self.train_x = np.array(self.train_x)
         self.train_y = np.array(self.train_y)
         self.sort_list_index()
@@ -95,7 +102,7 @@ class Surrogate_model():
         return sampling_value
 
     def medium_sampling(self):
-        medium_xtypes = [FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT]
+        medium_xtypes = [FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT]
         bound = [[] for j in range(22)]
 
         top_indices = self.sorted_index_list[:10]
@@ -104,7 +111,7 @@ class Surrogate_model():
                 if i not in [1,4,7,10,13,16]:
                     bound[i].append(float(self.train_x[top_index][i]))
 
-        medium_xlimits = [[min(bound[0]),max(bound[0])], [min(bound[2]),max(bound[2])], [min(bound[3]),max(bound[3])], [min(bound[5]),max(bound[5])], [min(bound[6]),max(bound[6])], [min(bound[8]),max(bound[8])], [min(bound[9]),max(bound[9])], [min(bound[11]),max(bound[11])], [min(bound[12]),max(bound[12])], [min(bound[14]),max(bound[14])], [min(bound[15]),max(bound[15])], [min(bound[17]),max(bound[17])], [min(bound[18]),max(bound[18])], [min(bound[19]),max(bound[19])], [min(bound[20]),max(bound[20])], [min(bound[21]),max(bound[21])]]
+        medium_xlimits = [[min(bound[0]),max(bound[0])], ["2.0", "2.45", "3.0"], [min(bound[2]),max(bound[2])], [min(bound[3]),max(bound[3])], ["2.0", "2.45", "3.0"], [min(bound[5]),max(bound[5])], [min(bound[6]),max(bound[6])], ["2.0", "2.45", "3.0"], [min(bound[8]),max(bound[8])], [min(bound[9]),max(bound[9])], ["2.0", "2.45", "3.0"], [min(bound[11]),max(bound[11])], [min(bound[12]),max(bound[12])], ["2.0", "2.45", "3.0"], [min(bound[14]),max(bound[14])], [min(bound[15]),max(bound[15])], ["2.0", "2.45", "3.0"], [min(bound[17]),max(bound[17])], [min(bound[18]),max(bound[18])], [min(bound[19]),max(bound[19])], [min(bound[20]),max(bound[20])], [min(bound[21]),max(bound[21])]]
         
         medium_mixint = MixedIntegerContext(medium_xtypes, medium_xlimits)
         sampling_method = medium_mixint.build_sampling_method(Random)
@@ -121,10 +128,16 @@ class Surrogate_model():
             k = int(self.sampling_num/5) 
             for j in range(k):
                 sampling = [0] * 22
-                for i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]:
+                for i in [0, 2, 3, 5, 6, 8, 9, 11, 12, 14, 15, 17]:
                     sampling[i] = float(self.train_x[top_index][i]) + random.uniform(-10, 10)
-                for i in [12, 13, 14, 15]:
+                for i in [18, 19, 20, 21]:
                     sampling[i] = float(self.train_x[top_index][i]) + random.uniform(-0.5, 0.5)
+                for i in [1,4,7,10,13,16]:
+                    rand_prob = random.random()
+                    if rand_prob < 0.1:
+                        sampling[i] = random.choice(self.FREQUENCY)
+                    else:
+                        sampling[i] = self.train_x[top_index][i]
                 candidate_sampling.append(sampling)
         return candidate_sampling
 

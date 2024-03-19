@@ -20,36 +20,33 @@ import argparse
 import numpy as np
 BOX_MINIMUM = 300
 BOX_MAXIMUM  = 500
-from utils import superposition
+from superposition import superposition
 
-
-
-
+# TODO: surrogate or RL
 def initial_LHS_model():
     # randomly generate parameter
-    xtypes = [FLOAT,  FLOAT, FLOAT,  FLOAT, FLOAT,  FLOAT, FLOAT,  FLOAT, FLOAT,  FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT]
-    xlimits = [[0, 360],  [500,900], [0, 360], [500,900], [0, 360],  [500,900], [0, 360],  [500,900], [0, 360], [500,900], [0, 360],  [500,900], [-100, 100], [-100, 100], [-100, 100], [-100, 100]]
+    xtypes = [FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, ORD, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT]
+    xlimits = [[0, 360], ["2","2.45","3"], [500,900], [0, 360], ["2","2.45","3"], [500,900], [0, 360], ["2","2.45","3"], [500,900], [0, 360], ["2","2.45","3"], [500,900], [0, 360], ["2","2.45","3"], [500,900], [0, 360], ["2","2.45","3"], [500,900], [-100, 100], [-100, 100], [-100, 100], [-100, 100]]
     mixint = MixedIntegerContext(xtypes, xlimits)
     sampling_method = mixint.build_sampling_method(Random)
     sampling_value = sampling_method(1)[0]
     # print((sampling_value))
-    input1 = sampling_value[:4]
-    input2 = sampling_value[4:8]
-    input3 = sampling_value[8:12]
-    position = sampling_value[12:]
+    input1 = sampling_value[:6]
+    input2 = sampling_value[6:12]
+    input3 = sampling_value[12:18]
+    position = sampling_value[18:]
     input1 = np.append(input1,position)
     input2 = np.append(input2,position)
     input3 = np.append(input3,position)
     sampling_split = [input1,input2,input3]
-    return sampling_split  
+    return sampling_split
 
 
 def Create_Initial_dataset_Superposition ():
-    path = "C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/"
-    dataset_path = "C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/data_1004.txt"
-    init_flag = False
+    path = "C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/Data1/"
+    dataset_path = "C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/data_1004.txt"
     for i in range(0,900,3):
-        elec_mean , elec_std, heat_mean, heat_std, val = superposition(path,i)
+        average, std = superposition(path,i)
         input_parameter = []
         for j in range(3):
             if j == 1 or j == 0:
@@ -64,15 +61,12 @@ def Create_Initial_dataset_Superposition ():
                     for line in lines:
                         ans = line.split(' ')[:-1]
                     input_parameter.extend(ans)
-        input_parameter.append(str(elec_mean))
-        input_parameter.append(str(elec_std))
-        input_parameter.append(str(heat_mean))
-        input_parameter.append(str(heat_std))
-        input_parameter.append(str(val))
-        
-        # print(input_parameter)
+        input_parameter.append(str(average - std * 2))
+        input_parameter.append(str(average))
+        input_parameter.append(str(std))
+        print(input_parameter)
 
-        with open(dataset_path,'w') as f:
+        with open(dataset_path,'a') as f:
             for para in input_parameter[:-1]:
                 f.write(str(para) + " ")
             f.write(str(input_parameter[-1]) + "\n")
@@ -82,7 +76,7 @@ def Create_Initial_dataset_Superposition ():
 if __name__ ==  "__main__":
     Create_Initial_dataset_Superposition()
     # parser = argparse.ArgumentParser(description='hello!')
-    # parser.add_argument('-p','--path',help='The path to the file',default='C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow')
+    # parser.add_argument('-p','--path',help='The path to the file',default='C:/Users/USER/Desktop/Tea_second/Code_v2_addPosition/Full_Flow')
     # parser.add_argument('-d','--data',help='data name',default='data_1004')
 
 
@@ -105,7 +99,7 @@ if __name__ ==  "__main__":
 
     # input_number = 0
     # output_number = 0
-    
+    #
     # for i in range(300):
     #     # predict
     #     parameters = initial_LHS_model()
