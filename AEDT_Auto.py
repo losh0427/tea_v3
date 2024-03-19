@@ -585,7 +585,7 @@ def Simulation(Waveport1_Phase, Waveport1_Frequency, Waveport1_Power, Waveport2_
 
 if __name__ ==  "__main__":
 
-	for iteration in range(0,250):
+	for iteration in range(0,240):
 		path = "C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/input"+str(iteration)+".txt"
 		while not os.path.exists(path):
 			time.sleep(1)
