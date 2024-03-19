@@ -34,8 +34,8 @@ BOX_MAXIMUM  = 500
 
 if __name__ ==  "__main__":
     parser = argparse.ArgumentParser(description='hello!')
-    parser.add_argument('-p','--path',help='The path to the file',default='C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow')
-    parser.add_argument('-d','--data',help='data name',default='data_1016_change')
+    parser.add_argument('-p','--path',help='The path to the file',default='C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/')
+    parser.add_argument('-d','--data',help='data name',default='data_1004')
 
 
     args = parser.parse_args()
@@ -84,28 +84,28 @@ if __name__ ==  "__main__":
         # ##export input
         # print((parameters[0]))
         with open(f'{PATH}/Data1/input{input_number}.txt', 'w') as f:
-            for index in [0,1,2,3,4,5,18,19,20,21]:
+            for index in [0,1,2,3,12,13,14,15]:
                 f.write((str(parameters[0][index])) + " ")
         input_number += 1
         with open(f'{PATH}/Data1/input{input_number}.txt', 'w') as f:
-            for index in [6,7,8,9,10,11,18,19,20,21]:
+            for index in [4,5,6,7,12,13,14,15]:
                 f.write((str(parameters[0][index]))+ " ")
         input_number += 1
         with open(f'{PATH}/Data1/input{input_number}.txt', 'w') as f:
-            for index in [12,13,14,15,16,17,18,19,20,21]:
+            for index in [8,9,10,11,12,13,14,15]:
                 f.write((str(parameters[0][index]))+ " ")
         input_number += 1
         if len(parameters) == 2:
             with open(f'{PATH}/Data1/input{input_number}.txt', 'w') as f:
-                for index in [0,1,2,3,4,5,18,19,20,21]:
+                for index in [0,1,2,3,12,13,14,15]:
                     f.write((str(parameters[1][index]))+ " ")
             input_number += 1
             with open(f'{PATH}/Data1/input{input_number}.txt', 'w') as f:
-                for index in [6,7,8,9,10,11,18,19,20,21]:
+                for index in [8,9,10,11,12,13,14,15]:
                     f.write((str(parameters[1][index]))+ " ")
             input_number += 1
             with open(f'{PATH}/Data1/input{input_number}.txt', 'w') as f:
-                for index in [12,13,14,15,16,17,18,19,20,21]:
+                for index in [8,9,10,11,12,13,14,15]:
                     f.write((str(parameters[1][index]))+ " ")
             input_number += 1
             
@@ -122,7 +122,7 @@ if __name__ ==  "__main__":
                 time.sleep(5)
 
             # analyze data
-            output_path = "C:/Users/USER/Desktop/Tea_second/Code_v3/Full_Flow/Data1/"
+            output_path = "C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/"
             Output_Handler_superposition(output_number-3,output_path,DATA_PATH,parameters[num])
 
 
@@ -147,11 +147,11 @@ if __name__ ==  "__main__":
             
             #if pre_max_index != max_index :
             #     drawHeatMap(output_path, output_number - 3, max_index)
-            print(f"round {num}, \
-                  this round predict value {parameters[num][-1]}, \
-                actual value {max_value}, 
-                actual electric average {actual_data[max_index][-5]}, actual electric std : {actual_data[max_index][-4]}, \
-                actual heat average {actual_data[max_index][-3]}, actual heat std : {actual_data[max_index][-2]}, \
+            print(f"round {num},\n \
+                  this round predict value {parameters[num][-1]},\n \
+                actual value {max_value}, \n \
+                actual electric average {actual_data[max_index][-5]}, actual electric std : {actual_data[max_index][-4]},\n \
+                actual heat average {actual_data[max_index][-3]}, actual heat std : {actual_data[max_index][-2]}, \n\
                 max index {max_index+1}")
             print("------------------------------")
             final_count+=1

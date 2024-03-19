@@ -72,12 +72,12 @@ def Create_Initial_dataset_Superposition ():
         
         # print(input_parameter)
 
-        with open(dataset_path,'w') as f:
+        with open(dataset_path,'a') as f:
             for para in input_parameter[:-1]:
                 f.write(str(para) + " ")
             f.write(str(input_parameter[-1]) + "\n")
-
-        print("finish")
+            print("finish")
+    print("finish")
 
 if __name__ ==  "__main__":
     Create_Initial_dataset_Superposition()

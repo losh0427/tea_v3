@@ -4,7 +4,7 @@ import statistics
 import numpy as np
 import os
 import shutil
-
+import copy
 
 def move_file(source, destination, initial_count, final_count):
     allfiles = os.listdir(source)
@@ -70,9 +70,9 @@ def superposition(OUTPUT_PATH,output_number):
         file2[i] =  [float(x) for x in file2[i].split()]
         file3[i] =  [float(x) for x in file3[i].split()]
     
-    heat_file1 = file1.copy()
-    heat_file2 = file2.copy()
-    heat_file3 = file3.copy()
+    heat_file1 = copy.deepcopy(file1)
+    heat_file2 = copy.deepcopy(file2)
+    heat_file3 = copy.deepcopy(file3)
     heat_file = elec_to_heat(heat_file1, heat_file2, heat_file3)
     
     #average electric fields       
