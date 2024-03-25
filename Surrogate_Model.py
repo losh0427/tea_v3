@@ -96,16 +96,14 @@ class Surrogate_model():
 
     def medium_sampling(self):
         medium_xtypes = [FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT]
-        bound = [[] for j in range(22)]
+        bound = [[] for j in range(16)]
 
         top_indices = self.sorted_index_list[:10]
         for top_index in top_indices:
-            for i in range(22):
-                if i not in [1,4,7,10,13,16]:
-                    bound[i].append(float(self.train_x[top_index][i]))
+            for i in range(16):
+                bound[i].append(self.train_x[top_index][i])
 
-        medium_xlimits = [[min(bound[0]),max(bound[0])], [min(bound[2]),max(bound[2])], [min(bound[3]),max(bound[3])], [min(bound[5]),max(bound[5])], [min(bound[6]),max(bound[6])], [min(bound[8]),max(bound[8])], [min(bound[9]),max(bound[9])], [min(bound[11]),max(bound[11])], [min(bound[12]),max(bound[12])], [min(bound[14]),max(bound[14])], [min(bound[15]),max(bound[15])], [min(bound[17]),max(bound[17])], [min(bound[18]),max(bound[18])], [min(bound[19]),max(bound[19])], [min(bound[20]),max(bound[20])], [min(bound[21]),max(bound[21])]]
-        
+        medium_xlimits = [[min(bound[0]),max(bound[0])],  [min(bound[1]),max(bound[1])], [min(bound[2]),max(bound[2])], [min(bound[3]),max(bound[3])], [min(bound[4]),max(bound[4])], [min(bound[5]),max(bound[5])], [min(bound[6]),max(bound[6])], [min(bound[7]),max(bound[7])], [min(bound[8]),max(bound[8])], [min(bound[9]),max(bound[9])], [min(bound[10]),max(bound[10])], [min(bound[11]),max(bound[11])], [min(bound[12]),max(bound[12])], [min(bound[13]),max(bound[13])], [min(bound[14]),max(bound[14])], [min(bound[15]),max(bound[15])]]
         medium_mixint = MixedIntegerContext(medium_xtypes, medium_xlimits)
         sampling_method = medium_mixint.build_sampling_method(Random)
         sampling_value = sampling_method(self.sampling_num)
