@@ -3,7 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from utils import superposition
+from utils import superposition, elec_to_heat
+import copy
 
 def heat_map(file, max_index):
     df = pd.DataFrame(file, columns=['X', 'Y', 'Z', 'Mag_E']).drop(columns=['Z'])
@@ -24,7 +25,7 @@ def heat_map(file, max_index):
     ax.set_yticklabels(y_ticklabel)
     
     figure = ax.get_figure()
-    figure.savefig('./heat_map/'+ str(max_index) +'.jpg', dpi = 400, bbox_inches='tight')
+    figure.savefig('./draw_data/'+ str(max_index) +'.jpg', dpi = 400, bbox_inches='tight')
     # plt.show()
 
 def drawHeatMap(OUTPUT_PATH,output_index, max_index):
@@ -40,13 +41,23 @@ def drawHeatMap(OUTPUT_PATH,output_index, max_index):
         file2[i] =  [float(x) for x in file2[i].split()]
         file3[i] =  [float(x) for x in file3[i].split()] 
     file = file1.copy() 
+    heat_file1 = copy.deepcopy(file1)
+    heat_file2 = copy.deepcopy(file2)
+    heat_file3 = copy.deepcopy(file3)
+    heat_file = elec_to_heat(heat_file1, heat_file2, heat_file3)
 
-    for i in range(len(file1)):
-        file[i][3] = (file1[i][3]+file2[i][3]+file3[i][3])/3
-    with open('./Maxdata.txt', 'w') as f:
-        for i in range(len(file)):
-            f.writelines(str(file[i]) + '\n')
-    heat_map(file, max_index)
+
+
+    # for i in range(len(file1)):
+    #     file[i][3] = (file1[i][3]+file2[i][3]+file3[i][3])/3
+    # with open('./Maxdata.txt', 'w') as f:
+    #     for i in range(len(file)):
+    #         f.writelines(str(file[i]) + '\n')
+    with open(f'{OUTPUT_PATH}/Maxdata.txt', 'w') as f:
+        for i in range(len(heat_file)):
+            f.writelines(str(heat_file[i]) + '\n')
+    
+    heat_map(heat_file, max_index)
 
 
 
@@ -57,6 +68,7 @@ if __name__ =='__main__':
     # while output_number <= 0:
     #     print(superposition("C:/Users/USER/Desktop/Tea_second/Code_v1/Full_Flow/Data1",0))
     #     output_number+=3
-    drawHeatMap("C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/", 63,63)
-    print(superposition("C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/", 63))
+    # drawHeatMap("C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/", 63,63)
+    # print(superposition("C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/Data1/", 63))
     #C:/Users/USER/Desktop/Tea_second/Code_v1/Full_Flow/Data
+    drawHeatMap("./draw_data", 114, 339)

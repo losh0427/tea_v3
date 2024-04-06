@@ -76,7 +76,7 @@ def Create_Initial_dataset_Superposition ():
             for para in input_parameter[:-1]:
                 f.write(str(para) + " ")
             f.write(str(input_parameter[-1]) + "\n")
-            print("finish")
+            print(i)
     print("finish")
 
 if __name__ ==  "__main__":

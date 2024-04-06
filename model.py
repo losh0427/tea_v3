@@ -101,7 +101,7 @@ if __name__ ==  "__main__":
                     f.write((str(parameters[1][index]))+ " ")
             input_number += 1
             with open(f'{PATH}/Data1/input{input_number}.txt', 'w') as f:
-                for index in [8,9,10,11,12,13,14,15]:
+                for index in [4,5,6,7,12,13,14,15]:
                     f.write((str(parameters[1][index]))+ " ")
             input_number += 1
             with open(f'{PATH}/Data1/input{input_number}.txt', 'w') as f:
@@ -149,9 +149,9 @@ if __name__ ==  "__main__":
             #     drawHeatMap(output_path, output_number - 3, max_index)
             print(f"round {num},\n \
                   this round predict value {parameters[num][-1]},\n \
-                actual value {max_value}, \n \
-                actual electric average {actual_data[max_index][-5]}, actual electric std : {actual_data[max_index][-4]},\n \
-                actual heat average {actual_data[max_index][-3]}, actual heat std : {actual_data[max_index][-2]}, \n\
+                actual max value {max_value}, \n \
+                actual max electric average {actual_data[max_index][-5]}, actual max electric std : {actual_data[max_index][-4]},\n \
+                actual max heat average {actual_data[max_index][-3]}, actual max heat std : {actual_data[max_index][-2]}, \n\
                 max index {max_index+1}")
             print("------------------------------")
             final_count+=1

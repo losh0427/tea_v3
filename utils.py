@@ -1,5 +1,4 @@
 import pandas as pd
-from superposition import superposition
 import statistics
 import numpy as np
 import os
