@@ -52,7 +52,7 @@ def objective_value(elec_mean , elec_std, heat_mean, heat_std):
     # weight function (need to be modified)
     # weight = [0.5, 0.5]
     # final_val = weight[0]*elec_mean + weight[1]*heat_mean
-    final_val = (heat_mean - heat_std)/2
+    final_val = 100000*(heat_mean - heat_std)/2 + (elec_mean - elec_std)/2
     return final_val
 
 def superposition(OUTPUT_PATH,output_number):

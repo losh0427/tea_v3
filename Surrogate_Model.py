@@ -32,22 +32,16 @@ class Surrogate_model():
         self.Power_MINIMUM = 500
         self.Power_MAXIMUM  = 900
         self.sampling_num = 30
-        self.xtypes = [FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT]
-        self.xlimits = [self.phase, self.Power, self.phase, self.Power, self.phase, self.Power, self.phase, self.Power, self.phase, self.Power, self.phase, self.Power, self.position, self.position, self.position, self.position]
-        self.mixint = MixedIntegerContext(self.xtypes, self.xlimits)
+        self.xtypes = [FLOAT for _ in range(16)]
+        self.xlimits = [self.phase, self.Power] * 6 + [self.position] * 4
         self.train_x = []
         self.train_y = []
         self.sorted_index_list = []
 
     def sort_list_index(self):
-        origin_list = []
-        sorted_list_index = []
-        for i in range(len(self.train_y)):
-            origin_list.append((self.train_y[i],i))
-        sort_list = sorted(origin_list, key = lambda x : x[0],reverse= True)
-        for i in range(len(self.train_y)):
-            sorted_list_index.append(sort_list[i][1])
-        self.sorted_index_list = sorted_list_index
+        origin_list = [(value, i) for i, value in enumerate(self.train_y)]
+        sorted_list = sorted(origin_list, key=lambda x: x[0], reverse=True)
+        self.sorted_index_list = [index for _, index in sorted_list]
 
     def build(self, data_path):
         with open(data_path, 'r') as f:
@@ -81,7 +75,6 @@ class Surrogate_model():
         self.Mymodel.train()
         with open('surrogate_model_sec.pkl','wb') as f:
             pickle.dump(self.Mymodel, f)
-
         #self.secondModel = self.mixint.build_surrogate_model(MGP(print_global=False))
         self.secondModel = self.mixint.build_surrogate_model(KPLS(print_global=False))
         self.secondModel.set_training_values(self.train_x, self.train_y)
