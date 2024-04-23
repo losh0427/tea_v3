@@ -1,7 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-data = pd.read_csv('data_1004.txt', sep=' ', header=None)
+
+PATH = "./mix/"
+
+
+data = pd.read_csv(PATH + 'data_1004.txt', sep=' ', header=None)
 #Model1_Waveport1_Phase, Model1_Waveport1_frequency, Model1_Waveport1_power, Model1_Waveport2_Phase, Model1_Waveport2_frequency, Model1_Waveport2_power
 data.columns = ["M1_W1_Phase", "M1_W1_Power", "M1_W2_Phase", "M1_W2_Power", "M2_W1_Phase", "M2_W1_Power", "M2_W2_Phase", "M2_W2_Power", "M3_W1_Phase", "M3_W1_Power", "M3_W2_Phase", "M3_W2_Power", 'waveport1_x', 'waveport1_y', 'waveport2_x', 'waveport2_y', "elec_mean_field", "elec_std_field", "heat_mean_field", "heat_std_field", "obj_val"]
 
@@ -25,10 +29,10 @@ current_heat_mean_field_value = heat_mean_field_value[0]
 current_heat_std_field_value = heat_std_field_value[0]
 
 max_index = -1
-real_data = objective_value
-real_avg = average_value
-real_std = std_value
-for i in range(1,len(current_elec_mean_field_value)):
+# real_data = objective_value
+# real_avg = average_value
+# real_std = std_value
+for i in range(1,len(elec_mean_field_value)):
     # if real_data[i] > current_max_value:
     #     current_max_value = real_data[i]
     #     current_average = real_avg[i]
@@ -54,17 +58,16 @@ for i in range(1,len(current_elec_mean_field_value)):
 
 # print(f"Max index {max_index}, max_value {real_data[max_index]},  average {real_avg[max_index]}, std {real_std[max_index]}")
 
-PATH = "./trend_plot/"
 
 
-plt.plot(real_data,'g-',label = 'max_elec_mean_field_value')
+plt.plot(elec_mean_field_value,'g-',label = 'max_elec_mean_field_value')
 plt.xlabel("number of data")
 plt.ylabel("max_elec_mean_field_value")
 plt.legend()
 plt.savefig(PATH + "max_elec_mean_field_value.png")
 plt.show()
 
-plt.plot(real_data,'g-',label = 'max_elec_std_field_value')
+plt.plot(elec_std_field_value,'g-',label = 'max_elec_std_field_value')
 plt.xlabel("number of data")
 plt.ylabel("max_elec_std_field_value")
 plt.legend()
@@ -72,14 +75,14 @@ plt.savefig(PATH + "max_elec_std_field_value.png")
 plt.show()
 
 
-plt.plot(real_data,'r-',label = 'max_heat_mean_field_value')
+plt.plot(heat_mean_field_value,'r-',label = 'max_heat_mean_field_value')
 plt.xlabel("number of data")
 plt.ylabel("max_heat_mean_field_value")
 plt.legend()
 plt.savefig(PATH + "max_heat_mean_field_value.png")
 plt.show()
 
-plt.plot(real_data,'r-',label = 'max_heat_std_field_value')
+plt.plot(heat_std_field_value,'r-',label = 'max_heat_std_field_value')
 plt.xlabel("number of data")
 plt.ylabel("max_heat_std_field_value")
 plt.legend()

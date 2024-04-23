@@ -52,7 +52,7 @@ def objective_value(elec_mean , elec_std, heat_mean, heat_std):
     # weight function (need to be modified)
     # weight = [0.5, 0.5]
     # final_val = weight[0]*elec_mean + weight[1]*heat_mean
-    final_val = 100000*(heat_mean - heat_std)/2 + (elec_mean - elec_std)/2
+    final_val = 100000*(heat_mean - heat_std)/6 + (elec_mean - elec_std)/2
     return final_val
 
 def superposition(OUTPUT_PATH,output_number):
@@ -76,6 +76,8 @@ def superposition(OUTPUT_PATH,output_number):
     
     #average electric fields       
     file = file1.copy() 
+    for i in range(len(file1)):
+        file[i][3] = (file1[i][3]+file2[i][3]+file3[i][3])
     elec_mean_field = statistics.mean([file[i][3] for i in range(len(file))])
     heat_mean_field = statistics.mean([heat_file[i][3] for i in range(len(heat_file))])
 
