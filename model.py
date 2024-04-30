@@ -20,7 +20,6 @@ from smt.applications.mixed_integer import(
 )
 import csv
 import argparse
-
 from utils import Output_Handler_superposition , move_file
 
 # PATH = "C:/Users/USER/Desktop/Code/Full_Flow"
@@ -54,6 +53,7 @@ if __name__ ==  "__main__":
     move_file_source = f'{PATH}Data1/'
     move_file_destination = f'{PATH}Data/'
     file_record = f'{PATH}move_file.txt'
+    time_path = './round_time.txt'
     # [debug]
     print(f"PATH : {PATH}")
     print(f"DATA_PATH : {DATA_PATH}")
@@ -72,12 +72,18 @@ if __name__ ==  "__main__":
     output_number = 0
     pre_max_index = -1
     for i in range(300):
+        # if i == 0 => search_time = 60 then search_time = 10* 60 
+        if i == 0:
+            seraching_time = 0
+        else:
+            seraching_time = 10 * 60
         start_time = time.time()
-        model = Surrogate_model()
+        model = Surrogate_model(seraching_time)
         model.build(DATA_PATH)
+        mid_time = time.time()
         parameters = model.find_max(i)
         end_time = time.time()
-        print(f"iteration {i}, time {end_time - start_time}, dataset_num {i+300}, sample_num {model.sampling_num}")
+        print(f"iteration {i}, total_time {end_time - start_time}, build_time {mid_time - start_time}, search_time {end_time - mid_time}, dataset_num {i+300}, sample_num {model.total_sampling_num } ")
         # ##parameters have 19 variable, the last one is predicted value 
         # ##export input
         # print((parameters[0]))
@@ -114,8 +120,13 @@ if __name__ ==  "__main__":
             for j in range(3):
                 path = f"{PATH}/Data1/output{output_number}.fld"
                 print(f"Waiting for output{output_number}")
+                start_time = time.time()
                 while not os.path.exists(path):
                     time.sleep(3)
+                end_time = time.time()
+                # add record time into file
+                with open(time_path, 'a') as f:
+                    f.write(f"{end_time - start_time}\n")
                 output_number += 1
                 time.sleep(5)
 

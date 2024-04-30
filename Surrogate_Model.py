@@ -18,12 +18,12 @@ import pickle
 from sklearn.gaussian_process.kernels import RBF
 from sklearn.gaussian_process import GaussianProcessRegressor
 #from RBF_discrete import SequenceKernel
-
+import time
 from sklearn.svm import SVR
 
 
 class Surrogate_model():
-    def __init__(self):
+    def __init__(self, search_time =  60 ):
         self.phase = [0, 360]
         self.Power = [500, 900]
         self.position = [-100, 100]
@@ -37,6 +37,8 @@ class Surrogate_model():
         self.train_x = []
         self.train_y = []
         self.sorted_index_list = []
+        self.search_time = search_time
+        self.total_sampling_num = 0
 
     def sort_list_index(self):
         origin_list = [(value, i) for i, value in enumerate(self.train_y)]
@@ -44,6 +46,7 @@ class Surrogate_model():
         self.sorted_index_list = [index for _, index in sorted_list]
 
     def build(self, data_path):
+        start_time = time.time()
         with open(data_path, 'r') as f:
             for line in f.readlines():
                 s = line.split(' ')
@@ -79,6 +82,10 @@ class Surrogate_model():
         self.secondModel = self.mixint.build_surrogate_model(KPLS(print_global=False))
         self.secondModel.set_training_values(self.train_x, self.train_y)
         self.secondModel.train()
+        end_time = time.time()
+        self.search_time -= (end_time - start_time)
+
+
 
 
     def global_sampling(self):
@@ -121,12 +128,13 @@ class Surrogate_model():
 
     # TODO: infill criteria
     def sampling(self, iteration):
-        if iteration < 80:
-            self.sampling_num = 30
-        elif iteration >= 80 and iteration < 160:
-            self.sampling_num = 20
-        else:
-            self.sampling_num = 10
+        # if iteration < 80:
+        #     self.sampling_num = 30
+        # elif iteration >= 80 and iteration < 160:
+        #     self.sampling_num = 20
+        # else:
+        #     self.sampling_num = 10
+        self.sampling_num = 10
         if iteration % 5 == 1:
             print("global sample")
             candidate_sampling = self.global_sampling()
@@ -136,41 +144,70 @@ class Surrogate_model():
         elif iteration % 5 == 0 or iteration % 5 == 2 or iteration % 5 == 4:
             print("local sample")
             candidate_sampling = self.local_sampling()
-        candidate_sampling = self.local_sampling()
+        # candidate_sampling = self.local_sampling()
         return candidate_sampling
 
     #TODO : choose point into Ansys
     def find_max(self, iteration):
+        max_val = 0
+        second_model_max_val = 0
+        tmp_test_x_first = None
+        tmp_test_x_second = None
+
+        search_start_time = time.time()
         test_x = np.array(self.sampling(iteration))
         test_y = self.Mymodel.predict_values(test_x)
         second_test_y = self.secondModel.predict_values(test_x)
-
-        max_val = 0
-        max_index = -1
-        second_model_max_val = 0
-        second_model_max_index = -1
+        self.total_sampling_num += len(test_x)
         for i in range(len(test_y)):
             if test_y[i] > max_val:
                 max_val = test_y[i]
-                max_index = i
-                
+                tmp_test_x_first = test_x[i]
         for i in range(len(second_test_y)):
             if second_test_y[i] > second_model_max_val:
                 second_model_max_val = second_test_y[i]
-                second_model_max_index = i
-                
+                tmp_test_x_second = test_x[i]
+        search_end_time = time.time()
+        self.search_time -= (search_end_time - search_start_time)
 
-        if max_index == second_model_max_index :
-            tmp = test_x[max_index].tolist()
+        while self.search_time > 0:
+            search_start_time = time.time()
+            test_x = np.array(self.sampling(iteration))
+            test_y = self.Mymodel.predict_values(test_x)
+            second_test_y = self.secondModel.predict_values(test_x)
+            for i in range(len(test_y)):
+                if test_y[i] > max_val:
+                    max_val = test_y[i]
+                    tmp_test_x_first = test_x[i]
+            for i in range(len(second_test_y)):
+                if second_test_y[i] > second_model_max_val:
+                    second_model_max_val = second_test_y[i]
+                    tmp_test_x_second = test_x[i]
+            search_end_time = time.time()
+            self.search_time -= (search_end_time - search_start_time)
+            self.total_sampling_num += len(test_x)
+        # if max_index == second_model_max_index :
+        #         tmp = test_x[max_index].tolist()
+        #         tmp.append(float(max_val))
+        #         return [tmp]
+        # else :
+        #     newPoint1 = test_x[max_index].tolist()
+        #     newPoint1.append(float(max_val))
+
+        #     newPoint2 = test_x[second_model_max_index].tolist()
+        #     newPoint2.append(float(second_model_max_val))
+        #     return [newPoint1,newPoint2]
+        # if the tmp_test_x_first and tmp_test_x_second are the same, return one point
+        if np.array_equal(tmp_test_x_first, tmp_test_x_second):
+            tmp = tmp_test_x_first.tolist()
             tmp.append(float(max_val))
             return [tmp]
-        else :
-            newPoint1 = test_x[max_index].tolist()
+        else:
+            newPoint1 = tmp_test_x_first.tolist()
             newPoint1.append(float(max_val))
-
-            newPoint2 = test_x[second_model_max_index].tolist()
+            newPoint2 = tmp_test_x_second.tolist()
             newPoint2.append(float(second_model_max_val))
-            return [newPoint1,newPoint2]
+            return [newPoint1, newPoint2]
         
         
     def export_result(self, logger):
