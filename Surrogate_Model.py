@@ -34,6 +34,7 @@ class Surrogate_model():
         self.sampling_num = 30
         self.xtypes = [FLOAT for _ in range(16)]
         self.xlimits = [self.phase, self.Power] * 6 + [self.position] * 4
+        self.mixint = MixedIntegerContext(self.xtypes, self.xlimits)
         self.train_x = []
         self.train_y = []
         self.sorted_index_list = []
@@ -134,21 +135,27 @@ class Surrogate_model():
         #     self.sampling_num = 20
         # else:
         #     self.sampling_num = 10
-        self.sampling_num = 10
+        self.sampling_num = 30
         if iteration % 5 == 1:
-            print("global sample")
+            # print("global sample")
             candidate_sampling = self.global_sampling()
         elif iteration % 5 ==  3:
-            print("medium sample")
+            # print("medium sample")
             candidate_sampling = self.medium_sampling()
         elif iteration % 5 == 0 or iteration % 5 == 2 or iteration % 5 == 4:
-            print("local sample")
+            # print("local sample")
             candidate_sampling = self.local_sampling()
         # candidate_sampling = self.local_sampling()
         return candidate_sampling
 
     #TODO : choose point into Ansys
     def find_max(self, iteration):
+        if iteration % 5 == 1:
+            print("global sample")
+        elif iteration % 5 ==  3:
+            print("medium sample")
+        elif iteration % 5 == 0 or iteration % 5 == 2 or iteration % 5 == 4:
+            print("local sample")
         max_val = 0
         second_model_max_val = 0
         tmp_test_x_first = None
