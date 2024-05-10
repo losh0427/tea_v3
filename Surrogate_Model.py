@@ -168,9 +168,25 @@ class Surrogate_model():
         self.total_sampling_num += len(test_x)
         for i in range(len(test_y)):
             if test_y[i] > max_val:
+                # check the parameters are all in the range
+                out_flag = False
+                for j in range(16):
+                    if test_x[i][j] < self.xlimits[j][0] or test_x[i][j] > self.xlimits[j][1]:
+                        out_flag = True
+                        break
+                if out_flag == True:
+                    continue
                 max_val = test_y[i]
                 tmp_test_x_first = test_x[i]
         for i in range(len(second_test_y)):
+            # check the parameters are all in the range
+            out_flag = False
+            for j in range(16):
+                if test_x[i][j] < self.xlimits[j][0] or test_x[i][j] > self.xlimits[j][1]:
+                    out_flag = True
+                    break
+            if out_flag == True:
+                continue
             if second_test_y[i] > second_model_max_val:
                 second_model_max_val = second_test_y[i]
                 tmp_test_x_second = test_x[i]
