@@ -52,7 +52,7 @@ def objective_value(elec_mean , elec_std, heat_mean, heat_std):
     # weight function (need to be modified)
     # weight = [0.5, 0.5]
     # final_val = weight[0]*elec_mean + weight[1]*heat_mean
-    final_val = (heat_mean - heat_std)/2
+    final_val = heat_mean - 30*heat_std
     return final_val
 
 def superposition(OUTPUT_PATH,output_number, heat_coeff, item_coeff):
@@ -128,7 +128,7 @@ def superposition(OUTPUT_PATH,output_number, heat_coeff, item_coeff):
 
 
 def Output_Handler_superposition(iteration, path, dataset_path, parameter, heat_coeff, item_coeff):
-    elec_mean , elec_std, heat_mean, heat_std , val = superposition(path,iteration, heat_coeff, item_coeff)
+    elec_mean , elec_std, heat_mean, heat_std , val = superposition(path, iteration, heat_coeff, item_coeff)
     parameter.pop(-1) # paramete[-1] is surrogate model predict value 
     parameter.append(str(elec_mean))
     parameter.append(str(elec_std))
@@ -140,7 +140,12 @@ def Output_Handler_superposition(iteration, path, dataset_path, parameter, heat_
             f.write(str(para) + " ")
         f.write(str(parameter[-1]) + "\n")
 
-
+def compute_average_round_time(time_path):
+    with open(time_path, 'r') as f:
+        lines = f.readlines()
+        time_list = [float(line) for line in lines]
+    return sum(time_list)/len(time_list)
 
 if __name__ =='__main__':
+    print(compute_average_round_time("./time.txt"))
     pass

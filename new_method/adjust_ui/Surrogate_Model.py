@@ -23,7 +23,7 @@ from sklearn.svm import SVR
 
 
 class Surrogate_model():
-    def __init__(self, search_time =  60 ):
+    def __init__(self, search_time , input_bound, heat_coeff, item_coeff):
         self.phase = [0, 360]
         self.Power = [500, 900]
         self.position = [-100, 100]
@@ -33,13 +33,15 @@ class Surrogate_model():
         self.Power_MAXIMUM  = 900
         self.sampling_num = 30
         self.xtypes = [FLOAT for _ in range(16)]
-        self.xlimits = [self.phase, self.Power] * 6 + [self.position] * 4
+        self.xlimits = input_bound
         self.mixint = MixedIntegerContext(self.xtypes, self.xlimits)
         self.train_x = []
         self.train_y = []
         self.sorted_index_list = []
         self.search_time = search_time
         self.total_sampling_num = 0
+        self.heat_coeff = heat_coeff
+        self.item_coeff = item_coeff
 
     def sort_list_index(self):
         origin_list = [(value, i) for i, value in enumerate(self.train_y)]
@@ -179,15 +181,15 @@ class Surrogate_model():
                 max_val = test_y[i]
                 tmp_test_x_first = test_x[i]
         for i in range(len(second_test_y)):
-            # check the parameters are all in the range
-            out_flag = False
-            for j in range(16):
-                if test_x[i][j] < self.xlimits[j][0] or test_x[i][j] > self.xlimits[j][1]:
-                    out_flag = True
-                    break
-            if out_flag == True:
-                continue
             if second_test_y[i] > second_model_max_val:
+                # check the parameters are all in the range
+                out_flag = False
+                for j in range(16):
+                    if test_x[i][j] < self.xlimits[j][0] or test_x[i][j] > self.xlimits[j][1]:
+                        out_flag = True
+                        break
+                if out_flag == True:
+                    continue
                 second_model_max_val = second_test_y[i]
                 tmp_test_x_second = test_x[i]
         search_end_time = time.time()
@@ -200,10 +202,26 @@ class Surrogate_model():
             second_test_y = self.secondModel.predict_values(test_x)
             for i in range(len(test_y)):
                 if test_y[i] > max_val:
+                    # check the parameters are all in the range
+                    out_flag = False
+                    for j in range(16):
+                        if test_x[i][j] < self.xlimits[j][0] or test_x[i][j] > self.xlimits[j][1]:
+                            out_flag = True
+                            break
+                    if out_flag == True:
+                        continue
                     max_val = test_y[i]
                     tmp_test_x_first = test_x[i]
             for i in range(len(second_test_y)):
                 if second_test_y[i] > second_model_max_val:
+                    # check the parameters are all in the range
+                    out_flag = False
+                    for j in range(16):
+                        if test_x[i][j] < self.xlimits[j][0] or test_x[i][j] > self.xlimits[j][1]:
+                            out_flag = True
+                            break
+                    if out_flag == True:
+                        continue
                     second_model_max_val = second_test_y[i]
                     tmp_test_x_second = test_x[i]
             search_end_time = time.time()
