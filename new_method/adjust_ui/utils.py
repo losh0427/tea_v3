@@ -129,7 +129,7 @@ def superposition(OUTPUT_PATH,output_number, heat_coeff, item_coeff):
 
 def Output_Handler_superposition(iteration, path, dataset_path, parameter, heat_coeff, item_coeff):
     elec_mean , elec_std, heat_mean, heat_std , val = superposition(path, iteration, heat_coeff, item_coeff)
-    parameter.pop(-1) # paramete[-1] is surrogate model predict value 
+    # parameter.pop(-1) # paramete[-1] is surrogate model predict value 
     parameter.append(str(elec_mean))
     parameter.append(str(elec_std))
     parameter.append(str(heat_mean))

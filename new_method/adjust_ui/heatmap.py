@@ -57,7 +57,10 @@ def drawHeatMap(HOME_PATH, OUTPUT_PATH, DRAW_PATH,output_index, max_index, elec_
         file2 = f2.readlines()[2:]
     with open(f'{HOME_PATH+OUTPUT_PATH}/output{output_index+2}.fld', 'r') as f3:
         file3 = f3.readlines()[2:]
-    
+    print('HOME_PATH : ', HOME_PATH)
+    print('OUTPUT_PATH : ',  OUTPUT_PATH)
+    print('output_index: ', output_index)
+    print('max_index : ', max_index)
     for i in range(len(file1)):
         file1[i] =  [float(x) for x in file1[i].split()]
         file2[i] =  [float(x) for x in file2[i].split()]
