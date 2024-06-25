@@ -62,18 +62,11 @@ def getResult(drawOutput, file_path):
             continue
     target_folder_path = None
     if target_folder is None:
-<<<<<<< HEAD
         temp_initial_count = temp_final_count
         data_dir = os.path.join(file_path, "Data1").replace("\\", "/")
         target_folder_path = data_dir
     else:
         target_folder_path = os.path.join(data_dir, target_folder)
-=======
-        raise ValueError(f"No suitable folder found for max_id {max_id} in {data_dir}")
-
-
-    target_folder_path = os.path.join(data_dir, target_folder)
->>>>>>> d168e2121069cbfff88900b559838f10a1494b2e
     max_id += 1
     pic_path = "/UI_pic"
     the_id = max_id - temp_initial_count
@@ -85,14 +78,10 @@ def getResult(drawOutput, file_path):
     
     plt.clf()
     # fix the middle parameter
-<<<<<<< HEAD
     if target_folder is None:
         drawHeatMap(file_path, "/Data1/", pic_path, the_id, max_id, elec_mean, elec_std, heat_mean, heat_std)
     else:
         drawHeatMap(file_path, "/Data/" + target_folder, pic_path, the_id, max_id, elec_mean, elec_std, heat_mean, heat_std)
-=======
-    drawHeatMap(file_path, "/Data/" + target_folder, pic_path, the_id, max_id, elec_mean, elec_std, heat_mean, heat_std)
->>>>>>> d168e2121069cbfff88900b559838f10a1494b2e
     
     plt.clf()
     draw_trend(file_path, file_path + "/UI_pic")
