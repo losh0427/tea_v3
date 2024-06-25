@@ -134,7 +134,7 @@ def global_optimization(exec_path="C:/Users/USER/Desktop/tea/3/Tea_second/Code_v
         
         with open(file_record, mode='w', encoding='utf-8') as f:
             f.writelines([str(final_count)+'\n', str(initial_count)])
-        if i >= round_num:
+        if len(actual_data) - initial_count >= round_num:
             break
 
 if __name__ == "__main__":
