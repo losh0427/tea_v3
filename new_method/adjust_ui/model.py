@@ -41,14 +41,14 @@ def move_files(file_record, source, destination):
 
 def global_optimization(exec_path="C:/Users/USER/Desktop/tea/3/Tea_second/Code_v3/Full_Flow/",
                         dataset_name="data_1004",
-                        round_num=300,
+                        round_num=80,
                         heat_coeff=100000,
                         item_coeff=0.95,
                         input_bound=[[0, 360], ["2.0", "2.45", "3.0"], [500, 900], [0, 360], ["2.0", "2.45", "3.0"], [500, 900], 
                                      [0, 360], ["2.0", "2.45", "3.0"], [500, 900], [0, 360], ["2.0", "2.45", "3.0"], [500, 900], 
                                      [0, 360], ["2.0", "2.45", "3.0"], [500, 900], [0, 360], ["2.0", "2.45", "3.0"], [500, 900], 
                                      [-100, 100], [-100, 100], [-100, 100], [-100, 100]],
-                        output_path='Data1', data_path='Data1', file_record='move_file.txt'):
+                        output_path='Data1', data_path='Data', file_record='move_file.txt'):
     
     if round_num == 0:
         # testing
@@ -60,15 +60,17 @@ def global_optimization(exec_path="C:/Users/USER/Desktop/tea/3/Tea_second/Code_v
     move_file_source = f'{PATH}{output_path}/'
     move_file_destination = f'{PATH}{data_path}/'
     file_record = f'{PATH}{file_record}'
+    output_path = f"{PATH}/{output_path}/"
     time_path = './round_time.txt'
     model_time_path = './model_time.txt'
     # comment in the future
-    input_bound = [[0, 360], [500, 900], [0, 360], [500, 900], [0, 360], [500, 900], [0, 360], [500, 900], [-100, 100], [-100, 100], [-100, 100], [-100, 100]]
-
+    input_bound=[[0, 360], [500, 900], [0, 360], [500, 900], 
+                [0, 360], [500, 900], [0, 360], [500, 900], 
+                [0, 360], [500, 900], [0, 360], [500, 900], 
+                [-100, 100], [-100, 100], [-100, 100], [-100, 100]]
 
 
     final_count, initial_count = move_files(file_record, move_file_source, move_file_destination)
-
     datamax_initial_len = 0
     with open(DATA_PATH, 'r', newline='') as csvfile:
         reader = csv.reader(csvfile)
@@ -91,25 +93,38 @@ def global_optimization(exec_path="C:/Users/USER/Desktop/tea/3/Tea_second/Code_v
 
         for param_set in parameters:
             for subset in [[0, 1, 2, 3, 12, 13, 14, 15], [4, 5, 6, 7, 12, 13, 14, 15], [8, 9, 10, 11, 12, 13, 14, 15]]:
-                with open(f'{PATH}/{data_path}/input{input_number}.txt', 'w') as f:
+                with open(f'{output_path}/input{input_number}.txt', 'w') as f:
                     f.write(" ".join(str(param_set[index]) for index in subset))
                 input_number += 1
         
         ## Waiting Ansys output
         for j in range(3):
-            path = f"{PATH}/{data_path}/output{output_number}.fld"
+            path = f"{output_path}/output{output_number}.fld"
             print(f"Waiting for output{output_number}")
             while not os.path.exists(path):
                 time.sleep(3)
             output_number += 1
             time.sleep(5)
         
+        # get now input data to output
         now_input = []
-        for idx in range(3):
-            with open(f'{PATH}/{data_path}/input{output_number-3+idx}.txt', 'r') as f:
-                now_input.extend(float(value) for value in f.readline().split())
+        with open(f'{PATH}/Data1/input{output_number-3}.txt', 'r') as f:
+            line = f.readlines()
+            # only append [0,1,2,3]
+            for i in range(4):
+                now_input.append(float(line[0].split(' ')[i]))
+        with open(f'{PATH}/Data1/input{output_number-2}.txt', 'r') as f:
+            line = f.readlines()
+            # only append [4,5,6,7]
+            for i in range(4):
+                now_input.append(float(line[0].split(' ')[i]))
+        with open(f'{PATH}/Data1/input{output_number-1}.txt', 'r') as f:
+            line = f.readlines()
+            for i in range(8):
+                now_input.append(float(line[0].split(' ')[i]))
+        print(f"now input number {output_number-3}, {output_number-2}, {output_number-1}")
+        print(f"now_input : {now_input}")
 
-        output_path = f"{PATH}/{data_path}/"
         Output_Handler_superposition(output_number-3, output_path, DATA_PATH, now_input, heat_coeff, item_coeff)
 
         actual_data = []
@@ -134,7 +149,7 @@ def global_optimization(exec_path="C:/Users/USER/Desktop/tea/3/Tea_second/Code_v
         
         with open(file_record, mode='w', encoding='utf-8') as f:
             f.writelines([str(final_count)+'\n', str(initial_count)])
-        if len(actual_data) - initial_count >= round_num:
+        if len(actual_data) - (initial_count-1) >= round_num:
             break
 
 if __name__ == "__main__":
