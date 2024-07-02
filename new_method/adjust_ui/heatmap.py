@@ -19,19 +19,10 @@ def heat_map(file, max_index, OUTPUT_PATH, type = 'elec', mean = 0, std = 0):
 # Code to be inserted where "# code here" comment is placed
     if type == 'elec':
         title = 'Electric field'
-        # vmax = mean + 4*std  
-        # vmin = mean - 4*std
-        # vmax = 1000000
-        # vmin = 0
         vmax = field_df.max().max()* 1.05
         vmin = field_df.min().min()* 0.95
     elif type == 'heat':
         title = 'Heat field'
-        # Use actual data range for colorbar limits
-        # vmax = mean + 4*std
-        # vmin = mean - 4*std
-        # vmax = 10
-        # vmin = 0
         vmax = field_df.max().max() * 1.05
         vmin = field_df.min().min() * 0.95
     # Now generate the heatmap
@@ -73,14 +64,6 @@ def drawHeatMap(HOME_PATH, OUTPUT_PATH, DRAW_PATH,output_index, max_index, elec_
 
     for i in range(len(file)):
         file[i][3] = (file1[i][3]+file2[i][3]+file3[i][3])
-        
-    # with open('./Maxdata.txt', 'w') as f:
-    #     for i in range(len(file)):
-    #         f.writelines(str(file[i]) + '\n')
-
-    # with open(f'{OUTPUT_PATH}/Maxdata.txt', 'w') as f:
-    #     for i in range(len(heat_file)):
-    #         f.writelines(str(heat_file[i]) + '\n')
     
     heat_map(file, max_index, HOME_PATH+DRAW_PATH, 'elec', elec_mean_field_value, elec_std_field_value)
     heat_map(heat_file, max_index, HOME_PATH+DRAW_PATH, 'heat', heat_mean_field_value, heat_std_field_value)
