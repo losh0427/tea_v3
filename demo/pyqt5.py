@@ -158,13 +158,13 @@ class App(QMainWindow):
         self.obj_val_trend_figure = QLabel()
         self.obj_val_trend_figure.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(self.obj_val_trend_figure)
-        self.obj_val_trend_figure_path = QLabel()
+        self.obj_val_trend_figure_path = QLabel()  # This label will be hidden
         self.obj_val_trend_figure_path.setFont(self.SMALL_FONT)
+        self.obj_val_trend_figure_path.setVisible(False)  # Ensure it's hidden
         self.layout.addWidget(self.obj_val_trend_figure_path)
 
         self.obj_val_label.setVisible(False)
         self.obj_val_trend_figure.setVisible(False)
-        self.obj_val_trend_figure_path.setVisible(False)
 
         # 右半邊
         output_layout = QVBoxLayout()
@@ -251,10 +251,8 @@ class App(QMainWindow):
         # update trend
         self.obj_val_label.setVisible(True)
         self.obj_val_trend_figure.setVisible(True)
-        self.obj_val_trend_figure_path.setVisible(True)
 
         trend_figure_path = ui2model.getTrendFigurePath(self.CURRENT_PATH)
-        self.obj_val_trend_figure_path.setText(trend_figure_path)
 
         pixmap = QPixmap()
         pixmap.load(trend_figure_path)
@@ -280,8 +278,6 @@ class App(QMainWindow):
         self.output_label.setText(
             f"電場平均:{e_avg}\t熱場平均:{h_avg}\tmax_id:{max_id}\n電場標準差:{e_std}\t熱場標準差:{h_std}"
         )
-        self.heat_figure_label_path.setText(heat_path)
-        self.electric_figure_label_path.setText(electric_path)
         self.progress_bar.hide()
 
         pixmap = QPixmap()
@@ -299,8 +295,6 @@ class App(QMainWindow):
         self.electric_figure_label.setVisible(True)
         self.heat_figure_label_title.setVisible(True)
         self.heat_figure_label.setVisible(True)
-        self.electric_figure_label_path.setVisible(False)  # Hide image source
-        self.heat_figure_label_path.setVisible(False)      # Hide image source
 
         self.confirm_button.setVisible(True)
         for i in range(self.output_text_layout.count()):
