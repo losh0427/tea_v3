@@ -131,13 +131,23 @@ class Surrogate_model():
 
     # TODO: infill criteria
     def sampling(self, iteration):
+        # if iteration < 80:
+        #     self.sampling_num = 30
+        # elif iteration >= 80 and iteration < 160:
+        #     self.sampling_num = 20
+        # else:
+        #     self.sampling_num = 10
         self.sampling_num = 30
         if iteration % 5 == 1:
+            # print("global sample")
             candidate_sampling = self.global_sampling()
         elif iteration % 5 ==  3:
+            # print("medium sample")
             candidate_sampling = self.medium_sampling()
         elif iteration % 5 == 0 or iteration % 5 == 2 or iteration % 5 == 4:
+            # print("local sample")
             candidate_sampling = self.local_sampling()
+        # candidate_sampling = self.local_sampling()
         return candidate_sampling
 
     #TODO : choose point into Ansys
@@ -160,10 +170,26 @@ class Surrogate_model():
         self.total_sampling_num += len(test_x)
         for i in range(len(test_y)):
             if test_y[i] > max_val:
+                # check the parameters are all in the range
+                # out_flag = False
+                # for j in range(16):
+                #     if test_x[i][j] < self.xlimits[j][0] or test_x[i][j] > self.xlimits[j][1]:
+                #         out_flag = True
+                #         break
+                # if out_flag == True:
+                #     continue
                 max_val = test_y[i]
                 tmp_test_x_first = test_x[i]
         for i in range(len(second_test_y)):
             if second_test_y[i] > second_model_max_val:
+                # check the parameters are all in the range
+                # out_flag = False
+                # for j in range(16):
+                #     if test_x[i][j] < self.xlimits[j][0] or test_x[i][j] > self.xlimits[j][1]:
+                #         out_flag = True
+                #         break
+                # if out_flag == True:
+                #     continue
                 second_model_max_val = second_test_y[i]
                 tmp_test_x_second = test_x[i]
         search_end_time = time.time()
@@ -176,15 +202,43 @@ class Surrogate_model():
             second_test_y = self.secondModel.predict_values(test_x)
             for i in range(len(test_y)):
                 if test_y[i] > max_val:
+                    # check the parameters are all in the range
+                    # out_flag = False
+                    # for j in range(16):
+                    #     if test_x[i][j] < self.xlimits[j][0] or test_x[i][j] > self.xlimits[j][1]:
+                    #         out_flag = True
+                    #         break
+                    # if out_flag == True:
+                    #     continue
                     max_val = test_y[i]
                     tmp_test_x_first = test_x[i]
             for i in range(len(second_test_y)):
                 if second_test_y[i] > second_model_max_val:
+                    # check the parameters are all in the range
+                    # out_flag = False
+                    # for j in range(16):
+                    #     if test_x[i][j] < self.xlimits[j][0] or test_x[i][j] > self.xlimits[j][1]:
+                    #         out_flag = True
+                    #         break
+                    # if out_flag == True:
+                    #     continue
                     second_model_max_val = second_test_y[i]
                     tmp_test_x_second = test_x[i]
             search_end_time = time.time()
             self.search_time -= (search_end_time - search_start_time)
             self.total_sampling_num += len(test_x)
+        # if max_index == second_model_max_index :
+        #         tmp = test_x[max_index].tolist()
+        #         tmp.append(float(max_val))
+        #         return [tmp]
+        # else :
+        #     newPoint1 = test_x[max_index].tolist()
+        #     newPoint1.append(float(max_val))
+
+        #     newPoint2 = test_x[second_model_max_index].tolist()
+        #     newPoint2.append(float(second_model_max_val))
+        #     return [newPoint1,newPoint2]
+        # if the tmp_test_x_first and tmp_test_x_second are the same, return one point
         if np.array_equal(tmp_test_x_first, tmp_test_x_second):
             tmp = tmp_test_x_first.tolist()
             tmp.append(float(max_val))

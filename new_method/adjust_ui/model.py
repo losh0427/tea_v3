@@ -79,7 +79,7 @@ def global_optimization(exec_path="C:/Users/USER/Desktop/tea/3/Tea_second/Code_v
     output_number = 0
     pre_max_index = -1
     for i in range(1000):
-        seraching_time = 0 if i == 0 else 10 * 60
+        seraching_time = 0 if i == 0 else 20 * 60
         start_time = time.time()
         model = Surrogate_model(seraching_time, input_bound, heat_coeff, item_coeff)
         model.build(DATA_PATH)
