@@ -19,17 +19,16 @@ def initial_LHS_model():
     
     return sampling_value
 
-def sample(num):
+def sampleing(num):
     samples = []
     for i in range(num):
         samples.append(initial_LHS_model())
     return samples
 
-def plot_3d(data, model, title, zlim):
+def plot_2d(data, model, title, zlim):
     # Clear the plot
     plt.clf()
-    fig = plt.figure(figsize=(12, 8))
-    ax = fig.add_subplot(111, projection='3d')
+    fig, ax = plt.subplots(figsize=(12, 8))
     
     # Create the meshgrid
     x1 = np.linspace(0, 500, 100)
@@ -41,56 +40,103 @@ def plot_3d(data, model, title, zlim):
     y = model.predict_values(X)
     Y = y.reshape(100, 100)
     
-    # Plot the surface with color mapping to Y values
-    surf = ax.plot_surface(X1, X2, Y, cmap='viridis', edgecolor='none', vmin=zlim[0], vmax=zlim[1])
-    fig.colorbar(surf, ax=ax, shrink=0.5, aspect=5)
+    # Plot the contour map with color mapping to Y values
+    contour = ax.contourf(X1, X2, Y, cmap='viridis', levels=100, vmin=zlim[0], vmax=zlim[1])
+    fig.colorbar(contour, ax=ax, shrink=0.5, aspect=5)
     
     # Plot the data points in red
-    ax.scatter(data['x1'], data['x2'], data['y'], color='red')
+    ax.scatter(data['x1'], data['x2'], color='red', label='Training Data', s=50)
     
-    # Set the limits for the x, y, and z axes
+    # Set the limits for the x and y axes
     ax.set_xlim(0, 500)
     ax.set_ylim(0, 500)
-    ax.set_zlim(zlim[0], zlim[1])
     
     ax.set_title(title)
     ax.set_xlabel('x1')
     ax.set_ylabel('x2')
-    ax.set_zlabel('y')
 
     # Save the plot
     plt.savefig(f'{title}.png')
 
+
 if __name__ == '__main__':
-    # Sample 50 points
-    samples = sample(50)
-    
-    # Save it to csv
-    with open('sample.csv', 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(["x1", "x2", "y"])
-        for sample in samples:
-            # Generate dummy y values for demonstration
-            y_value = np.sin(sample[0]) + np.cos(sample[1]) + np.tan(sample[2])
-            writer.writerow([sample[0], sample[1], y_value])
 
-    # Load the data
-    data = pd.read_csv('sample.csv')
-    data.columns = ['x1', 'x2', 'y']
-    
-    # Create the kriging model
-    krg = KRG(print_global=False)
-    krg.set_training_values(data[['x1', 'x2']].values, data['y'].values)
-    krg.train()
 
-    # Create the kpls model
-    kpls = KPLS(print_global=False)
-    kpls.set_training_values(data[['x1', 'x2']].values, data['y'].values)
-    kpls.train()
+    # do the program below three time : in folder "1", "2", "3"
+    for i in range(3, 4):
+        if not os.path.exists(str(i)):
+            os.mkdir(str(i))
+        os.chdir(str(i))
+
+        if i != 1:
+            # Sample 50 points
+            samples = sampleing(50)
+            
+            # Save it to csv
+            with open('sample.csv', 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(["x1", "x2", "y"])
+                for sample in samples:
+                    # Generate dummy y values for demonstration
+                    y_value = np.sin(sample[0]) + np.cos(sample[1]) + np.tan(sample[2])
+                    writer.writerow([sample[0], sample[1], y_value])
+
+        
+
+        # Load the data
+        data = pd.read_csv('sample.csv')
+        data.columns = ['x1', 'x2', 'y']
+        
+        # Create the kriging model
+        krg = KRG(print_global=False)
+        krg.set_training_values(data[['x1', 'x2']].values, data['y'].values)
+        krg.train()
+
+        # Create the kpls model
+        kpls = KPLS(print_global=False)
+        kpls.set_training_values(data[['x1', 'x2']].values, data['y'].values)
+        kpls.train()
+        
+        # Determine the color limits
+        zlim = [data['y'].min(), data['y'].max()]
+        
+        # Plot the results
+        plot_2d(data, krg, 'KRG', zlim)
+        plot_2d(data, kpls, 'KPLS', zlim)
+        os.chdir('..')
+
+
+    # # Sample 50 points
+    # samples = sample(50)
     
-    # Determine the color limits
-    zlim = [data['y'].min(), data['y'].max()]
+    # # Save it to csv
+    # with open('sample.csv', 'w', newline='') as file:
+    #     writer = csv.writer(file)
+    #     writer.writerow(["x1", "x2", "y"])
+    #     for sample in samples:
+    #         # Generate dummy y values for demonstration
+    #         y_value = np.sin(sample[0]) + np.cos(sample[1]) + np.tan(sample[2])
+    #         writer.writerow([sample[0], sample[1], y_value])
+
     
-    # Plot the results
-    plot_3d(data, krg, 'KRG', zlim)
-    plot_3d(data, kpls, 'KPLS', zlim)
+
+    # # Load the data
+    # data = pd.read_csv('sample.csv')
+    # data.columns = ['x1', 'x2', 'y']
+    
+    # # Create the kriging model
+    # krg = KRG(print_global=False)
+    # krg.set_training_values(data[['x1', 'x2']].values, data['y'].values)
+    # krg.train()
+
+    # # Create the kpls model
+    # kpls = KPLS(print_global=False)
+    # kpls.set_training_values(data[['x1', 'x2']].values, data['y'].values)
+    # kpls.train()
+    
+    # # Determine the color limits
+    # zlim = [data['y'].min(), data['y'].max()]
+    
+    # # Plot the results
+    # plot_3d(data, krg, 'KRG', zlim)
+    # plot_3d(data, kpls, 'KPLS', zlim)
