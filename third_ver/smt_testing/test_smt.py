@@ -68,18 +68,20 @@ if __name__ == '__main__':
             os.mkdir(str(i))
         os.chdir(str(i))
 
-        if i != 1:
-            # Sample 50 points
-            samples = sampleing(50)
+
+
+        # if i != 1:
+        #     # Sample 50 points
+        #     samples = sampleing(50)
             
-            # Save it to csv
-            with open('sample.csv', 'w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(["x1", "x2", "y"])
-                for sample in samples:
-                    # Generate dummy y values for demonstration
-                    y_value = np.sin(sample[0]) + np.cos(sample[1]) + np.tan(sample[2])
-                    writer.writerow([sample[0], sample[1], y_value])
+        #     # Save it to csv
+        #     with open('sample.csv', 'w', newline='') as file:
+        #         writer = csv.writer(file)
+        #         writer.writerow(["x1", "x2", "y"])
+        #         for sample in samples:
+        #             # Generate dummy y values for demonstration
+        #             y_value = np.sin(sample[0]) + np.cos(sample[1]) + np.tan(sample[2])
+        #             writer.writerow([sample[0], sample[1], y_value])
 
         
 
