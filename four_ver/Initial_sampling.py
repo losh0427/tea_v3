@@ -79,11 +79,6 @@ def Create_Initial_dataset_Superposition ():
             print(i)
     print("finish")
 
-
-
-
-
-
 if __name__ ==  "__main__":
     Create_Initial_dataset_Superposition()
     # parser = argparse.ArgumentParser(description='hello!')

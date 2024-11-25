@@ -77,10 +77,12 @@ class Surrogate_model():
         self.sort_list_index()
         # traing model
         self.Mymodel = self.mixint.build_surrogate_model(KRG(print_global=False))
+        # self.Mymodel = self.mixint.build_surrogate_model(KRG(print_global=False,corr='matern52', theta0=[10.0]*16, n_start=20,theta_bounds=[1e-3,1e3]))
+
         self.Mymodel.set_training_values(self.train_x, self.train_y)
         self.Mymodel.train()
-        with open('surrogate_model_sec.pkl','wb') as f:
-            pickle.dump(self.Mymodel, f)
+        # with open('surrogate_model_sec.pkl','wb') as f:
+        #     pickle.dump(self.Mymodel, f)
         #self.secondModel = self.mixint.build_surrogate_model(MGP(print_global=False))
         self.secondModel = self.mixint.build_surrogate_model(KPLS(print_global=False))
         self.secondModel.set_training_values(self.train_x, self.train_y)
@@ -267,6 +269,10 @@ class Surrogate_model():
     def import_KPLS(self, name):
         with open(name, 'rb') as f:
             self.secondModel = pickle.load(f)
+    def ontput_KRG(self, test_x):
+        test_y = self.Mymodel.predict_values(test_x)
+        second_test_y = self.secondModel.predict_values(test_x)
+        
         
 
 

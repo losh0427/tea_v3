@@ -59,11 +59,12 @@ def plot_2d(data, model, title, zlim):
     plt.savefig(f'{title}.png')
 
 
+
 if __name__ == '__main__':
 
 
     # do the program below three time : in folder "1", "2", "3"
-    for i in range(3, 4):
+    for i in range(1, 4):
         if not os.path.exists(str(i)):
             os.mkdir(str(i))
         os.chdir(str(i))
@@ -105,6 +106,11 @@ if __name__ == '__main__':
         # Plot the results
         plot_2d(data, krg, 'KRG', zlim)
         plot_2d(data, kpls, 'KPLS', zlim)
+
+        # show the data : min, max, mean, std value for each model in each folder
+        print(f"folder {i}")
+        print(f"KRG min : {data['y'].min()} max : {data['y'].max()} mean : {data['y'].mean()} std : {data['y'].std()}")
+        print(f"KPLS min : {data['y'].min()} max : {data['y'].max()} mean : {data['y'].mean()} std : {data['y'].std()}")
         os.chdir('..')
 
 

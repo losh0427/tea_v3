@@ -1,18 +1,12 @@
 import numpy as np
 
 # 1. Prepare the Training Data
-X_train = np.array([
-    [1, 2],
-    [2, 3],
-    [3, 4]
-])
+X_train = np.array([[0, 0], [1, 0], [0, 1]])
 
-y_train = np.array([3, 5, 7])
+y_train = np.array([1, 1.8415, 0.5403])
 
 # 2. Prepare the Testing Data
-X_test = np.array([
-    [4, 5]
-])
+X_test = np.array([[1, 1]])
 
 # 3. Set the Gamma Parameter for the Gaussian Kernel
 gamma = 0.5
@@ -23,7 +17,6 @@ def gaussian_kernel(X1, X2, gamma):
     return np.exp(-gamma * sq_dists)
 
 K = gaussian_kernel(X_train, X_train, gamma)
-
 # 5. Center the Kernel Matrix
 N = K.shape[0]
 one_N = np.ones((N, N)) / N
@@ -33,6 +26,7 @@ K_centered = K - one_N @ K - K @ one_N + one_N @ K @ one_N
 y_mean = np.mean(y_train)
 y_centered = y_train - y_mean
 
+
 # 7. Compute the Weight Vector
 w = K_centered @ y_centered
 
@@ -41,10 +35,8 @@ w_norm = w / np.linalg.norm(w)
 
 # 9. Compute the Scores
 t = K_centered @ w_norm
-
 # 10. Compute the Regression Coefficient
 c = (t @ y_centered) / (t @ t)
-
 # 11. Compute the Final Model Coefficients
 beta = w_norm * c
 

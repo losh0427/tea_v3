@@ -3,7 +3,7 @@ from utils import superposition
 from heatmap import drawHeatMap
 import pandas as pd
 import matplotlib.pyplot as plt
-# from model import global_optimization
+from model import global_optimization
 from analyze_data import draw_trend
 import os
 
@@ -27,8 +27,8 @@ def run(iteration_time, material_coefficient, ETconvert_coefficient, seconds_nee
     # global_optimization()
     # test
     # global_optimization(round_num=1)
-    # global_optimization(round_num=0)    
-    # global_optimization(round_num=80)
+    # global_optimization(round_num=1)    
+    global_optimization(round_num=80)
     # sleep(5)
     update_progress(5)
 
