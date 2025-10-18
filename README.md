@@ -1,9 +1,5 @@
 # High-Performance Parameter Search System for Microwave Optimization in Magnetron Cavities
 
-## Introduction
-
-Microwave Heating Electromagnetic Field Optimization System
-
 ## Project Overview
 
 This project aims to automatically optimize electromagnetic field distribution in microwave heating systems through surrogate modeling and global optimization techniques. The system integrates ANSYS HFSS electromagnetic simulation with machine learning methods to achieve efficient parameter search and optimization for uniform electromagnetic and thermal field distribution.

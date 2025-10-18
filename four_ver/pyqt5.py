@@ -23,10 +23,10 @@ class App(QMainWindow):
         super().__init__()
         self.CURRENT_PATH = getcwd().replace("\\", "/")
 
-        self.setWindowTitle("茶葉計畫")
+        self.setWindowTitle("TEA Project")
 
-        self.FONT = QFont("微軟正黑體", 14)
-        self.SMALL_FONT = QFont("微軟正黑體", 10)
+        self.FONT = QFont("Arial", 14)
+        self.SMALL_FONT = QFont("Arial", 10)
         ENTRY_WIDTH = 10
 
         main_widget = QWidget()
@@ -63,9 +63,9 @@ class App(QMainWindow):
         bound_setting_layout_right = QVBoxLayout()
         bound_setting_layout.addLayout(bound_setting_layout_right)
 
-        bound_setting_layout_left.addWidget(QLabel("變量", font=self.FONT))
-        bound_setting_layout_mid.addWidget(QLabel("上界", font=self.FONT))
-        bound_setting_layout_right.addWidget(QLabel("下界", font=self.FONT))
+        bound_setting_layout_left.addWidget(QLabel("Variable", font=self.FONT))
+        bound_setting_layout_mid.addWidget(QLabel("Upper Bound", font=self.FONT))
+        bound_setting_layout_right.addWidget(QLabel("Lower Bound", font=self.FONT))
 
         data_name = [
             "Power",
@@ -89,17 +89,17 @@ class App(QMainWindow):
             self.lower_bound_entry[i].setValidator(QDoubleValidator())
             bound_setting_layout_right.addWidget(self.lower_bound_entry[i])
 
-        # 材料
+        # Material settings
         material_frame = QHBoxLayout()
         self.layout.addLayout(material_frame)
-        material_frame.addWidget(QLabel("材料係數設定:", font=self.FONT))
+        material_frame.addWidget(QLabel("Material Coefficient:", font=self.FONT))
         self.material_entry = QLineEdit()
         self.material_entry.setText("0.95")
         self.material_entry.setFont(self.FONT)
         self.material_entry.setFixedWidth(ENTRY_WIDTH * 15)
         self.material_entry.setValidator(QDoubleValidator())
         material_frame.addWidget(self.material_entry)
-        material_frame.addWidget(QLabel("熱電轉換係數:", font=self.FONT))
+        material_frame.addWidget(QLabel("Electrothermal Conversion Coefficient:", font=self.FONT))
         self.ETconvert_entry = QLineEdit()
         self.ETconvert_entry.setText("100000")
         self.ETconvert_entry.setFont(self.FONT)
@@ -107,17 +107,17 @@ class App(QMainWindow):
         self.ETconvert_entry.setValidator(QDoubleValidator())
         material_frame.addWidget(self.ETconvert_entry)
 
-        # 輸入
+        # Input settings
         input_frame = QHBoxLayout()
         self.layout.addLayout(input_frame)
-        input_frame.addWidget(QLabel("秒數:", font=self.FONT))
+        input_frame.addWidget(QLabel("Seconds:", font=self.FONT))
         self.seconds_entry = QLineEdit()
         self.seconds_entry.setText("3")
         self.seconds_entry.setFont(self.FONT)
         self.seconds_entry.setFixedWidth(ENTRY_WIDTH * 15)
         self.seconds_entry.setValidator(QDoubleValidator())
         input_frame.addWidget(self.seconds_entry)
-        input_frame.addWidget(QLabel("搜索次數:", font=self.FONT))
+        input_frame.addWidget(QLabel("Search Iterations:", font=self.FONT))
         self.runs_entry = QLineEdit()
         self.runs_entry.setText("5")
         self.runs_entry.setFont(self.FONT)
@@ -125,20 +125,20 @@ class App(QMainWindow):
         self.runs_entry.setValidator(QDoubleValidator())
         input_frame.addWidget(self.runs_entry)
 
-        # 計算按鈕
-        self.calculate_button = QPushButton("計算")
+        # Calculate button
+        self.calculate_button = QPushButton("Calculate")
         self.calculate_button.setFont(self.FONT)
         self.layout.addWidget(self.calculate_button)
         self.calculate_button.clicked.connect(self.calculate)
 
-        # 確認按鈕
-        self.confirm_button = QPushButton("確認", self)
+        # Confirm button
+        self.confirm_button = QPushButton("Confirm", self)
         self.confirm_button.setFont(self.FONT)
         self.layout.addWidget(self.confirm_button)
         self.confirm_button.clicked.connect(self.show_message_and_hide_button)
         self.confirm_button.setVisible(False)
 
-        # 進度條
+        # Progress bar
         style = """
             QProgressBar {
                 text-align:center;
@@ -167,15 +167,15 @@ class App(QMainWindow):
         self.obj_val_trend_figure.setVisible(False)
         self.obj_val_trend_figure_path.setVisible(False)
 
-        # 右半邊
+        # Right panel
         output_layout = QVBoxLayout()
         self.global_layout.addLayout(output_layout)
 
-        # 輸出數值
+        # Output values
         self.output_text_layout = QVBoxLayout()
         output_layout.addLayout(self.output_text_layout)
 
-        output_label = QLabel("輸出數值:")
+        output_label = QLabel("Output Values:")
         output_label.setFont(self.FONT)
         self.output_text_layout.addWidget(output_label)
         self.output_label = QLabel()
@@ -187,14 +187,14 @@ class App(QMainWindow):
             if widget is not None:
                 widget.setVisible(False)
 
-        # 圖表
+        # Figures
         self.figure_layout = QVBoxLayout()
         output_layout.addLayout(self.figure_layout)
 
         self.electric_figure_text_layout = QHBoxLayout()
         self.figure_layout.addLayout(self.electric_figure_text_layout)
 
-        self.electric_figure_label_title = QLabel("電場")
+        self.electric_figure_label_title = QLabel("Electric Field")
         self.electric_figure_label_title.setFont(self.FONT)
         self.electric_figure_text_layout.addWidget(self.electric_figure_label_title)
 
@@ -209,7 +209,7 @@ class App(QMainWindow):
         self.heat_figure_text_layout = QHBoxLayout()
         self.figure_layout.addLayout(self.heat_figure_text_layout)
 
-        self.heat_figure_label_title = QLabel("熱場")
+        self.heat_figure_label_title = QLabel("Thermal Field")
         self.heat_figure_label_title.setFont(self.FONT)
         self.heat_figure_text_layout.addWidget(self.heat_figure_label_title)
 
@@ -268,7 +268,7 @@ class App(QMainWindow):
         eta_seconds = (elapsed_time / (i + 1)) * (self.iteration - i - 1)
         hours, remainder = divmod(eta_seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
-        eta_str = f"預計完成時間: {int(hours)}小時 {int(minutes)}分 {int(seconds)}秒            "
+        eta_str = f"Estimated time remaining: {int(hours)}h {int(minutes)}m {int(seconds)}s            "
         self.eta_label.setText(eta_str)
 
         QApplication.processEvents()
@@ -276,9 +276,9 @@ class App(QMainWindow):
     def doOutputResult(
         self, heat_path, electric_path, e_avg, h_avg, e_std, h_std, max_id
     ):
-        self.eta_label.setText("已完成")
+        self.eta_label.setText("Completed")
         self.output_label.setText(
-            f"電場平均:{e_avg}\t熱場平均:{h_avg}\tmax_id:{max_id}\n電場標準差:{e_std}\t熱場標準差:{h_std}"
+            f"E-field Avg:{e_avg}\tH-field Avg:{h_avg}\tmax_id:{max_id}\nE-field Std:{e_std}\tH-field Std:{h_std}"
         )
         self.heat_figure_label_path.setText(heat_path)
         self.electric_figure_label_path.setText(electric_path)

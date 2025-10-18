@@ -7,22 +7,22 @@ from model import global_optimization
 from analyze_data import draw_trend
 import os
 
-# 最開始初始化時搜索的次數
+# Initial search iterations at the beginning
 INIT_ITERATION = 300
 
-# 會在pyqt5.py呼叫
+# Called from pyqt5.py
 def run(iteration_time, material_coefficient, ETconvert_coefficient, seconds_need, data_limit, update_progress):
     # TODO 
     
-    # iteration_time 預設240
-    # material_coefficient 預設0.95
-    # ETconvert_coefficient 預設100000
-    # update_progress更新進度條，每次搜索完畢後傳入完成的次數
-    # 例如，update_progress(i)
+    # iteration_time default is 240
+    # material_coefficient default is 0.95
+    # ETconvert_coefficient default is 100000
+    # update_progress updates the progress bar, passing in the number of completed iterations after each search
+    # For example, update_progress(i)
 
-    # seconds_need 預設3，可以暫時不管
-    # data_limit 預設 [[0, 360], [500, 900], [-100, 100]]
-    # 為phase, power, position的上下界，也可暫時不管
+    # seconds_need default is 3, can be temporarily ignored
+    # data_limit default is [[0, 360], [500, 900], [-100, 100]]
+    # Represents upper and lower bounds for phase, power, position, can also be temporarily ignored
 
     # global_optimization()
     # test
@@ -33,7 +33,7 @@ def run(iteration_time, material_coefficient, ETconvert_coefficient, seconds_nee
     update_progress(5)
 
 
-    # 預計從這裡執行model
+    # Expected to execute model from here
 
     # for i in range(iteration_time):
     #     sleep(2)
@@ -98,12 +98,12 @@ def getResult(drawOutput, file_path):
 
 
 
-# 視情況可以隨便改或刪除
+# Can be modified or deleted as needed
 def getTrendArrayAndMaxId(file_path):
 
     # TODO
-    # 這個函數主要是為了獲得畫趨勢圖所需的數據，順便給出max_id
-    # 由於data_1004從第541行開始多了1筆資料所以暫時壞了
+    # This function is mainly for obtaining data needed for trend plotting, and also provides max_id
+    # Note: data_1004 has an extra record starting from line 541, so it's temporarily broken
     actual_data = []        
     with open(file_path + "/data_1004.txt", 'r') as f:
         lines = f.readlines()
@@ -136,13 +136,13 @@ def getTrendArrayAndMaxId(file_path):
     #     else:
     #         real_data[i] = current_max_value
 
-    # 測試用，需移除
+    # For testing, needs to be removed
     # real_data = [1,2,3,4,5,6,7,8,8,9,9,9,10,10,10,10]
     # max_index = 13
     return max_data, max_index
 
 
-# 會在pyqt5.py呼叫
+# Called from pyqt5.py
 def getTrendFigurePath(file_path):
     print("??")
     print(file_path)
