@@ -71,18 +71,14 @@ smt (Surrogate Modeling Toolbox)
 
 ## Installation
 
-1. **Clone the Repository**
-```bash
-git clone https://github.com/losh0427/tea_v3.git
-cd tea_v3
-```
 
-2. **Install Dependencies**
+
+**Install Dependencies**
 ```bash
 pip install PyQt6 numpy pandas matplotlib seaborn scikit-learn smt
 ```
 
-3. **Configure ANSYS Path**
+**Configure ANSYS Path**
    - Ensure ANSYS HFSS is properly installed
    - Modify the path settings in `AEDT_Auto.py`
 
@@ -90,23 +86,13 @@ pip install PyQt6 numpy pandas matplotlib seaborn scikit-learn smt
 
 ### Method 1: GUI Interface (Recommended)
 
-1. **Launch the Graphical Interface**
+**Launch the Graphical Interface**
 ```bash
 cd four_ver
 python pyqt5.py
 ```
 
-2. **Configure Parameters**
-   - **Variable Settings**: Set upper and lower bounds for Power (500-900W) and Position (-100-100mm)
-   - **Material Coefficient**: Default 0.95
-   - **Electrothermal Conversion Coefficient**: Default 100000
-   - **Duration**: Search time per round (default 3 seconds)
-   - **Search Iterations**: Number of optimization iterations (default 5)
 
-3. **Run Optimization**
-   - Click the "Calculate" button to start optimization
-   - Monitor real-time progress bar and trend plots
-   - View final electric and thermal field distribution maps
 
 ### Method 2: Command Line Execution
 
