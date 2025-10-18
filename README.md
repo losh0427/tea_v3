@@ -2,9 +2,15 @@
 
 Microwave Heating Electromagnetic Field Optimization System
 
-## 📋 Project Overview
+## Project Overview
 
 This project aims to automatically optimize electromagnetic field distribution in microwave heating systems through surrogate modeling and global optimization techniques. The system integrates ANSYS HFSS electromagnetic simulation with machine learning methods to achieve efficient parameter search and optimization for uniform electromagnetic and thermal field distribution.
+
+## Related Publications
+
+This project has been published at the TAAI conference:
+- **Paper Link**: [https://www.taai.org.tw/files/domestic/77/taai_tea_final.pdf](https://www.taai.org.tw/files/domestic/77/taai_tea_final.pdf)
+
 
 ### Key Features
 
@@ -14,12 +20,8 @@ This project aims to automatically optimize electromagnetic field distribution i
 - **Visualization Interface**: PyQt6-based graphical user interface
 - **Real-time Monitoring**: Real-time progress tracking and trend visualization during optimization
 
-## 📚 Related Publications
 
-This project has been published at the TAAI conference:
-- **Paper Link**: [https://www.taai.org.tw/files/domestic/77/taai_tea_final.pdf](https://www.taai.org.tw/files/domestic/77/taai_tea_final.pdf)
-
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 tea_v3/
@@ -52,12 +54,11 @@ tea_v3/
 └── smt_testing/                 # SMT library testing
 ```
 
-## 🔧 System Requirements
+## System Requirements
 
 ### Software Requirements
 - Python 3.8+
 - ANSYS Electronics Desktop (HFSS)
-- Windows Operating System
 
 ### Python Packages
 ```
@@ -70,7 +71,7 @@ scikit-learn
 smt (Surrogate Modeling Toolbox)
 ```
 
-## 📦 Installation
+## Installation
 
 1. **Clone the Repository**
 ```bash
@@ -87,7 +88,7 @@ pip install PyQt6 numpy pandas matplotlib seaborn scikit-learn smt
    - Ensure ANSYS HFSS is properly installed
    - Modify the path settings in `AEDT_Auto.py`
 
-## 🚀 Usage
+## Usage
 
 ### Method 1: GUI Interface (Recommended)
 
@@ -120,7 +121,7 @@ Parameter Description:
 - `-p, --path`: Project root directory path
 - `-d, --data`: Dataset filename (without extension)
 
-## 🔬 Core Functionality
+## Core Functionality
 
 ### 1. Surrogate Model
 
@@ -140,10 +141,6 @@ Sampling strategies cycle through based on iteration count (5-round cycle).
 
 ### 3. Optimization Objective Function
 
-```python
-objective_value = heat_mean - 30 * heat_std
-```
-
 Goal: Maximize average thermal field intensity while minimizing standard deviation of thermal field distribution for uniform heating.
 
 ### 4. ANSYS HFSS Automation
@@ -160,7 +157,7 @@ Goal: Maximize average thermal field intensity while minimizing standard deviati
 - Statistical analysis: Calculate mean and standard deviation
 - Visualization: Generate heatmaps and trend plots
 
-## 📊 Output Results
+## Output Results
 
 ### 1. Numerical Output
 - Electric field mean and standard deviation
@@ -179,7 +176,7 @@ Goal: Maximize average thermal field intensity while minimizing standard deviati
 - `model_time.txt`: Model training time log
 - `round_time.txt`: Execution time per round log
 
-## ⚙️ Parameter Description
+## Parameter Description
 
 ### Optimization Parameters (16 Dimensions)
 
@@ -190,14 +187,7 @@ Goal: Maximize average thermal field intensity while minimizing standard deviati
 | Position X1-X2 | -100-100mm | X-axis position of waveguides |
 | Position Y1-Y2 | -100-100mm | Y-axis position of waveguides |
 
-### Material Parameters
-
-- **Electrothermal Conversion Coefficient** (ETconvert_coefficient): 100000
-  - Coefficient for converting electric field intensity to thermal field intensity
-- **Material Coefficient** (material_coefficient): 0.95
-  - Material's influence on thermal field diffusion
-
-## 🧪 Experimental Workflow
+## Experimental Workflow
 
 1. **Initial Sampling**: Generate initial dataset using LHS or random sampling (300 samples)
 2. **Model Training**: Train KRG and KPLS models using initial data
@@ -209,52 +199,4 @@ Goal: Maximize average thermal field intensity while minimizing standard deviati
    - Repeat steps (80 rounds)
 4. **Result Analysis**: Generate heatmaps, trend plots, and statistical data
 
-## 🐛 Known Issues
 
-- ANSYS HFSS path requires manual configuration
-- Monitor disk space during extensive simulations
-- Windows path format needs special handling
-
-## 📝 Development Notes
-
-### Program Flow
-
-```
-GUI (pyqt5.py)
-    ↓
-UI Interface Layer (ui2model.py)
-    ↓
-Optimization Main (model.py)
-    ↓
-Surrogate Model (Surrogate_Model.py)
-    ↓
-ANSYS Automation (AEDT_Auto.py)
-    ↓
-Result Processing (utils.py, heatmap.py, analyze_data.py)
-    ↓
-Visualization Output
-```
-
-### Extension Suggestions
-
-- Add more surrogate models (e.g., RBF, Neural Networks)
-- Implement multi-objective optimization
-- Support more microwave source configurations
-- Improve sampling strategies
-- Parallelize ANSYS simulations
-
-## 👥 Contributors
-
-- Repository Owner: [@losh0427](https://github.com/losh0427)
-
-## 📄 License
-
-Please refer to the project license documentation.
-
-## 📧 Contact
-
-For any questions or suggestions, please submit via GitHub Issues.
-
----
-
-**Note**: This project is for research purposes. Please adjust parameters and configurations according to specific requirements for actual applications.
