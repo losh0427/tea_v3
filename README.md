@@ -1,4 +1,6 @@
-# TEA Project (Tea Electromagnetic Analysis & Optimization)
+# High-Performance Parameter Search System for Microwave Optimization in Magnetron Cavities
+
+## Introduction
 
 Microwave Heating Electromagnetic Field Optimization System
 
